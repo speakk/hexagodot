@@ -1,0 +1,55 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Object",
+"class": "Coordinate",
+"language": "GDScript",
+"path": "res://Coordinate.gd"
+}, {
+"base": "Node2D",
+"class": "Hex",
+"language": "GDScript",
+"path": "res://Hex.gd"
+}, {
+"base": "YSort",
+"class": "Map",
+"language": "GDScript",
+"path": "res://Map.gd"
+}, {
+"base": "Reference",
+"class": "MapTools",
+"language": "GDScript",
+"path": "res://MapTools.gd"
+} ]
+_global_script_class_icons={
+"Coordinate": "",
+"Hex": "",
+"Map": "",
+"MapTools": ""
+}
+
+[application]
+
+config/name="Hexagodot"
+run/main_scene="res://InGame.tscn"
+config/icon="res://icon.png"
+
+[gui]
+
+common/drop_mouse_on_gui_input_disabled=true
+
+[physics]
+
+common/enable_pause_aware_picking=true
+
+[rendering]
+
+environment/default_environment="res://default_env.tres"
