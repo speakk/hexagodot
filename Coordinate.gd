@@ -8,3 +8,6 @@ var r: int
 func _init(_q: int, _r: int):
   q = _q
   r = _r
+
+func get_key():
+  return str(q, "_", r)

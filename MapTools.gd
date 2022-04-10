@@ -73,10 +73,12 @@ static func axial_round(fraq_q: float, fraq_r: float) -> Coordinate:
     return Coordinate.new(q, r)
 
 static func pointy_hex_to_pixel(coordinate: Coordinate) -> Vector2:
-	var q = coordinate.q
-	var r = coordinate.r
-	var x = (POINTY_HEX_MATRIX.f0 * q + POINTY_HEX_MATRIX.f1 * r) * HEX_LAYOUT_SIZE_X;
-	var y = (POINTY_HEX_MATRIX.f2 * q + POINTY_HEX_MATRIX.f3 * r) * HEX_LAYOUT_SIZE_Y;
+  var q = coordinate.q
+  var r = coordinate.r
+  var x = (POINTY_HEX_MATRIX.f0 * q + POINTY_HEX_MATRIX.f1 * r) * HEX_LAYOUT_SIZE_X;
+  var y = (POINTY_HEX_MATRIX.f2 * q + POINTY_HEX_MATRIX.f3 * r) * HEX_LAYOUT_SIZE_Y;
 
-	return Vector2(x, y)
+  return Vector2(x, y)
 
+static func move_entity_to_coordinate(entity, coordinate: Coordinate):
+  entity.position = pointy_hex_to_pixel(coordinate)
