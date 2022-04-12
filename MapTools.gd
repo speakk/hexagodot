@@ -82,3 +82,16 @@ static func pointy_hex_to_pixel(coordinate: Coordinate) -> Vector2:
 
 static func move_entity_to_coordinate(entity, coordinate: Coordinate):
   entity.position = pointy_hex_to_pixel(coordinate)
+  
+static func get_neighbor_directions() -> Array:
+  return [
+        Coordinate.new(1, 0 ),
+        Coordinate.new(1, -1 ),
+        Coordinate.new(0, -1 ),
+        Coordinate.new(-1, 0 ),
+        Coordinate.new(-1, 1 ),
+        Coordinate.new(0, 1 ),
+        ]
+
+static func coordinate_add(coord1, coord2):
+  return Coordinate.new(coord1.q + coord2.q, coord1.r + coord2.r)

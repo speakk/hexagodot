@@ -5,7 +5,14 @@ class_name Map
 const HEX = preload("Hex.tscn")
 const UNIT = preload("Unit.tscn")
 
+# coordinate key -> unit
 var unit_map: Dictionary = {}
+
+var hexes: Dictionary = {}
+
+var astar = AStar2D.new()
+
+var hilighted_path
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -13,7 +20,25 @@ func _ready():
   for coordinate in coordinates:
     var hex = HEX.instance().init(coordinate.q, coordinate.r)
     hex.connect("hex_clicked", self, "_on_hex_clicked")
+    hex.connect("hex_hovered", self, "_on_hex_hovered")
     add_child(hex)
+    hexes[coordinate.to_int()] = hex
+    astar.add_point(coordinate.to_int(), Vector2(coordinate.q, coordinate.r))
+  
+  for coordinate in coordinates:
+    var neighbor_directions = MapTools.get_neighbor_directions()
+    for neighbor_direction in neighbor_directions:
+      var neighbor_coordinate = MapTools.coordinate_add(coordinate, neighbor_direction)
+      if astar.has_point(neighbor_coordinate.to_int()):
+        astar.connect_points(coordinate.to_int(), neighbor_coordinate.to_int(), true)
+
+func _process(dt):
+  if hilighted_path:
+    for id in hilighted_path:
+      var coordinate = Coordinate.new().from_int(id)
+      var hex = hexes[id]
+      hex.modulate = Color(0, 1, 0)
+      
 
 func _on_hex_clicked(hex: Hex):
   print("HEX CLICKED")
@@ -24,6 +49,22 @@ func _on_hex_clicked(hex: Hex):
     select_unit(coordinate)
   else:
     place_unit(coordinate)
+    
+func _on_hex_hovered(hex: Hex):
+  var selected
+  var from_coord
+  for key in unit_map:
+    print("Units key", key)
+    if unit_map[key].selected:
+      selected = unit_map[key]
+      from_coord = Coordinate.new().set_from_key(key)
+      break
+  
+  if selected:
+    hilighted_path = astar.get_point_path(hex.to_coordinate().to_int(), from_coord.to_int())
+    print("found", " ", hex.to_coordinate().to_int(), " ", from_coord.to_int(), " ", hilighted_path)
+    print("So basically ", hex.q, ",", hex.r, " from ", from_coord.q, ",", from_coord.r)
+    
 
 func place_unit(coordinate: Coordinate):
   var unit = UNIT.instance().init(coordinate.q, coordinate.r)

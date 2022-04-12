@@ -8,6 +8,7 @@ export var r = 0
 var hovered = false
 
 signal hex_clicked(Hex)
+signal hex_hovered(Hex)
 
 func init(_q, _r):
   q = _q
@@ -21,6 +22,7 @@ func _on_mouse_entered():
   hovered = true
   $Hexagon.modulate = HOVER_COLOR
   $HoverTween.remove_all()
+  emit_signal("hex_hovered", self)
 
 func _on_mouse_exited():
   hovered = false
