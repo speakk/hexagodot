@@ -19,11 +19,12 @@ func set_from_key(key: String):
   print("set from key", q, r)
   return self
 
-# For a unique id for path finding
+# For a unique id for path finding (+100000 to ensure it's positive)
 func to_int():
-  return q * 1000 + r
+  return q * 1000 + r + 100000
 
 func from_int(id):
+  id = id - 100000
   q = floor(id / 1000)
   r = id - (q * 1000)
   return self

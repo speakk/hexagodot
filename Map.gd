@@ -23,21 +23,37 @@ func _ready():
     hex.connect("hex_hovered", self, "_on_hex_hovered")
     add_child(hex)
     hexes[coordinate.to_int()] = hex
-    astar.add_point(coordinate.to_int(), Vector2(coordinate.q, coordinate.r))
+    if hex.q == 0 and hex.r == -3:
+      print("WE HAD 0, -3: ", coordinate.to_int())
+    astar.add_point(coordinate.to_int(), MapTools.pointy_hex_to_pixel(coordinate))
+    if hex.q == 0 and hex.r == -3:
+      print("SO NOW HAS POINT RIGHT?", astar.has_point(coordinate.to_int()))    
+    #astar.add_point(coordinate.to_int(), hex.position)
   
   for coordinate in coordinates:
     var neighbor_directions = MapTools.get_neighbor_directions()
+    if coordinate.q == 0 and coordinate.r == -2:
+      print("Okay, 0 and - 2 here...")
+      print("Neighbors how many: ", neighbor_directions.size())
     for neighbor_direction in neighbor_directions:
       var neighbor_coordinate = MapTools.coordinate_add(coordinate, neighbor_direction)
+      if coordinate.q == 0 and coordinate.r == -2:
+        print("Neighbor: ", neighbor_coordinate.q, ", ", neighbor_coordinate.r, " int id: ", neighbor_coordinate.to_int())
       if astar.has_point(neighbor_coordinate.to_int()):
-        astar.connect_points(coordinate.to_int(), neighbor_coordinate.to_int(), true)
+        if coordinate.q == 0 and coordinate.r == -2:
+          print("Connecting ", coordinate.q, ",", coordinate.r, " to ", neighbor_coordinate.q, ",", neighbor_coordinate.r)
+        astar.connect_points(coordinate.to_int(), neighbor_coordinate.to_int(), false)
 
 func _process(dt):
+  for key in hexes:
+    hexes[key].path_hilight = false
+    
   if hilighted_path:
     for id in hilighted_path:
       var coordinate = Coordinate.new().from_int(id)
       var hex = hexes[id]
-      hex.modulate = Color(0, 1, 0)
+      hex.path_hilight = true
+      #hex.modulate = Color(0, 1, 0)
       
 
 func _on_hex_clicked(hex: Hex):
@@ -61,9 +77,10 @@ func _on_hex_hovered(hex: Hex):
       break
   
   if selected:
-    hilighted_path = astar.get_point_path(hex.to_coordinate().to_int(), from_coord.to_int())
+    hilighted_path = astar.get_id_path(hex.to_coordinate().to_int(), from_coord.to_int())
     print("found", " ", hex.to_coordinate().to_int(), " ", from_coord.to_int(), " ", hilighted_path)
     print("So basically ", hex.q, ",", hex.r, " from ", from_coord.q, ",", from_coord.r)
+    print("Points connected? ", astar.are_points_connected(hex.to_coordinate().to_int(), from_coord.to_int()))
     
 
 func place_unit(coordinate: Coordinate):
