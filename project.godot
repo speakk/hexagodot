@@ -39,8 +39,19 @@ _global_script_class_icons={
 [application]
 
 config/name="Hexagodot"
-run/main_scene="res://InGame.tscn"
+run/main_scene="res://Main.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+SceneManager="*res://SceneManager.tscn"
+
+[display]
+
+window/size/width=720
+window/size/height=480
+window/stretch/mode="viewport"
+window/stretch/aspect="keep"
 
 [gui]
 

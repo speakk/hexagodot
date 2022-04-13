@@ -36,6 +36,7 @@ func _process(dt):
 
 func _on_mouse_entered():
   hovered = true
+  print("Hmm")
   #$Hexagon.modulate = HOVER_COLOR
   #$HoverTween.remove_all()
   emit_signal("hex_hovered", self)

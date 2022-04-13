@@ -5,7 +5,7 @@ extends Node2D
 # var a = 2
 # var b = "text"
 
-const MAP = preload("Map.tscn")
+#const MAP = preload("res://Map.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
