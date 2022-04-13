@@ -12,7 +12,7 @@ theme = ExtResource( 2 )
 script = ExtResource( 1 )
 
 [node name="Map" parent="." instance=ExtResource( 3 )]
-position = Vector2( 385, 242 )
+position = Vector2( 358, 222 )
 map_shape = 1
 map_radius = 27
 

@@ -4,9 +4,12 @@
 [ext_resource path="res://Hex.gd" type="Script" id=2]
 
 [node name="Hex" type="Node2D"]
+modulate = Color( 0.752941, 0.752941, 0.752941, 1 )
+light_mask = 2
 script = ExtResource( 2 )
 
 [node name="Hexagon" type="Sprite" parent="."]
+light_mask = 2
 position = Vector2( 0, 7 )
 texture = ExtResource( 1 )
 
