@@ -1,16 +1,7 @@
 extends Node2D
 
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
 var current_scene
 var current_index = 0
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-  pass # Replace with function body.
 
 func switch_scenes(sceneName):
   var to_scene = load("res://MainScenes/%s.tscn" % sceneName).instance()

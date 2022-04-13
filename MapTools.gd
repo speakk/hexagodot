@@ -30,21 +30,16 @@ static func create_grid(radius: int, shape) -> Array:
 
                 for r in range(r1,r2):
                     hexes.push_back(Coordinate.new(q, r))
-            # }
-            #
-            #        MapShape::Square => {
-            #            let top = ((-radius / 2) as f32).floor() as i32;
-            #            let left = ((-radius / 2) as f32).floor() as i32;
-            #            let bottom = ((radius / 2) as f32).floor() as i32;
-            #            let right = ((radius / 2) as f32).floor() as i32;
-            #            for r in top..bottom {
-            #                let r_offset = ((r / 2) as f32).floor() as i32;
-            #                for q in left - r_offset..right - r_offset {
-            #                    hexes.push(Coordinate { q, r });
-            #                }
-            #            }
-            #        }
-            #    }
+
+    elif shape == MapShape.Square:
+      var top = floor(-radius / 2)
+      var left = floor(-radius / 2)
+      var bottom = floor(radius / 2)
+      var right = floor(radius / 2)
+      for r in range(top, bottom):
+        var r_offset = floor(r/2)
+        for q in range(left - r_offset, right - r_offset):
+          hexes.push_back(Coordinate.new(q, r))
 
     return hexes
 

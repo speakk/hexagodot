@@ -5,6 +5,9 @@ class_name Map
 const HEX = preload("Hex.tscn")
 const UNIT = preload("Unit.tscn")
 
+export(MapTools.MapShape) var map_shape
+export(int) var map_radius = 7
+
 # coordinate key -> unit
 var unit_map: Dictionary = {}
 
@@ -17,7 +20,7 @@ var hilighted_path
 var selected_unit
 
 func _ready():
-  var coordinates = MapTools.create_grid(7, MapTools.MapShape.Hexagonal)
+  var coordinates = MapTools.create_grid(map_radius, map_shape)
   for coordinate in coordinates:
     var hex = HEX.instance().init(coordinate.q, coordinate.r)
     hex.connect("hex_clicked", self, "_on_hex_clicked")
@@ -57,7 +60,6 @@ func _on_hex_clicked(hex: Hex):
       place_unit(coordinate)
     
 func _on_hex_hovered(hex: Hex):
-  print("uh...")
   if selected_unit:
     var from_coord
     for key in unit_map:
