@@ -23,10 +23,11 @@ func command_place_unit(args):
     $Map.place_unit(unit, hex)
     
 func command_move_unit(args):
-  var coordinate = args.coordinate
+  print("command_move_unit")
+  var hex = args.hex
   var unit = args.unit
-  unit.position = MapTools.pointy_hex_to_pixel(coordinate)
-  $Map.place_unit(unit)
+  #unit.position = MapTools.pointy_hex_to_pixel(coordinate)
+  $Map.place_unit(unit, hex)
 
 
 func _on_Map_try_to_place_unit(hex):

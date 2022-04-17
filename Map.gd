@@ -3,7 +3,7 @@ extends YSort
 class_name Map
 
 signal try_to_place_unit(coordinate)
-signal try_to_move_unit(Unit, Coordinate)
+signal try_to_move_unit(unit, hex)
 
 const HEX = preload("Hex.tscn")
 const UNIT = preload("Unit.tscn")
@@ -53,6 +53,7 @@ func _process(dt):
 func _on_hex_clicked(hex: Hex):
   var coordinate = hex.to_coordinate()
   var hex_units = hexes[coordinate.to_int()].get_node("Units").get_children()
+  print("Hex units size", hex_units.size())
   if hex_units.size() > 0:
     for key in hexes:
       var other_hex = hexes[key]
@@ -61,7 +62,7 @@ func _on_hex_clicked(hex: Hex):
     select_unit(hex_units[0])
   else:
     if selected_unit:
-      move_unit(selected_unit, coordinate)
+      emit_signal("try_to_move_unit", selected_unit, hex)
     else:
       emit_signal("try_to_place_unit", hex)
     
@@ -71,8 +72,13 @@ func _on_hex_hovered(hex: Hex):
     hilighted_path = astar.get_id_path(hex.to_coordinate().to_int(), from_coord.to_int())
 
 func place_unit(unit, hex):
+  if unit.get_parent():
+    unit.get_parent().remove_child(unit)
   hex.get_node("Units").add_child(unit)
-  print("Placed ", unit)
+  unit.global_position = hex.global_position
+  unit.z_index = 1
+  unit.place(hex.q, hex.r)
+  clear_last_selected()
 
 func select_unit(unit):
   unit.select()
@@ -80,3 +86,10 @@ func select_unit(unit):
   
 func move_unit(unit, to):
   pass
+
+func clear_last_selected():
+  if selected_unit:
+    selected_unit.deselect()
+    selected_unit = null
+  
+  hilighted_path = null

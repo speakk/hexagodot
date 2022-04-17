@@ -14,6 +14,10 @@ func init(_q, _r):
   #MapTools.move_entity_to_coordinate(self, Coordinate.new(_q, _r))
   return self
   
+func place(_q, _r):
+  q = _q
+  r = _r
+  
 func get_coordinate():
   print("get", q, r)
   return Coordinate.new(q, r)
