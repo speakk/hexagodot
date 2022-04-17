@@ -36,19 +36,10 @@ func _process(dt):
 
 func _on_mouse_entered():
   hovered = true
-  print("Hmm")
-  #$Hexagon.modulate = HOVER_COLOR
-  #$HoverTween.remove_all()
   emit_signal("hex_hovered", self)
 
 func _on_mouse_exited():
   hovered = false
-  #$HoverTween.interpolate_property($Hexagon, "modulate",
-  #HOVER_COLOR, Color(1,1,1), 0.5,
-  #$HoverTween.TRANS_QUAD, Tween.EASE_OUT)
-  
-  #$HoverTween.start()
-
 
 func _on_input_event(viewport, event, shape_idx):
   if event is InputEventMouseButton:

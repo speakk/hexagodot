@@ -9,6 +9,16 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node",
+"class": "Command",
+"language": "GDScript",
+"path": "res://Commands/Command.gd"
+}, {
+"base": "Reference",
+"class": "Controller",
+"language": "GDScript",
+"path": "res://Controller.gd"
+}, {
 "base": "Object",
 "class": "Coordinate",
 "language": "GDScript",
@@ -28,12 +38,26 @@ _global_script_classes=[ {
 "class": "MapTools",
 "language": "GDScript",
 "path": "res://MapTools.gd"
+}, {
+"base": "Reference",
+"class": "Team",
+"language": "GDScript",
+"path": "res://Team.gd"
+}, {
+"base": "Node2D",
+"class": "Unit",
+"language": "GDScript",
+"path": "res://Unit.gd"
 } ]
 _global_script_class_icons={
+"Command": "",
+"Controller": "",
 "Coordinate": "",
 "Hex": "",
 "Map": "",
-"MapTools": ""
+"MapTools": "",
+"Team": "",
+"Unit": ""
 }
 
 [application]

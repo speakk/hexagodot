@@ -2,6 +2,9 @@ extends YSort
 
 class_name Map
 
+signal try_to_place_unit(coordinate)
+signal try_to_move_unit(Unit, Coordinate)
+
 const HEX = preload("Hex.tscn")
 const UNIT = preload("Unit.tscn")
 
@@ -57,7 +60,7 @@ func _on_hex_clicked(hex: Hex):
     if selected_unit:
       move_unit(selected_unit, coordinate)
     else:
-      place_unit(coordinate)
+      emit_signal("try_to_place_unit", coordinate)
     
 func _on_hex_hovered(hex: Hex):
   if selected_unit:
@@ -69,9 +72,7 @@ func _on_hex_hovered(hex: Hex):
         
     hilighted_path = astar.get_id_path(hex.to_coordinate().to_int(), from_coord.to_int())
 
-func place_unit(coordinate: Coordinate):
-  var unit = UNIT.instance().init(coordinate.q, coordinate.r)
-  unit_map[coordinate.get_key()] = unit
+func place_unit(unit):
   add_child(unit)
 
 func select_unit(coordinate: Coordinate):

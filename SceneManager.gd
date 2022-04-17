@@ -1,7 +1,11 @@
 extends Node2D
 
-var current_scene
 var current_index = 0
+
+func get_current_scene():
+  var nextViewportContainer = $Containers.get_child(current_index)
+  var scene = nextViewportContainer.get_child(0).get_child(0)
+  return scene
 
 func switch_scenes(sceneName):
   var to_scene = load("res://MainScenes/%s.tscn" % sceneName).instance()
