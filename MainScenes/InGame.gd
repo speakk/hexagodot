@@ -16,13 +16,22 @@ func execute_commands(commands: Array):
     yield(execute_command(command.func_ref, command.args), "completed")
 
 func command_place_unit(args):
-    var coordinate = args.coordinate
-    var unit = UNIT.instance().init(coordinate.q, coordinate.r)
+    var hex = args.hex
+    var unit = UNIT.instance().init(hex.q, hex.r)
     unit.team = current_team
     unit.add_to_group("in_team")
-    $Map.place_unit(unit)
-    $Map.unit_map[coordinate.get_key()] = unit
+    $Map.place_unit(unit, hex)
+    
+func command_move_unit(args):
+  var coordinate = args.coordinate
+  var unit = args.unit
+  unit.position = MapTools.pointy_hex_to_pixel(coordinate)
+  $Map.place_unit(unit)
 
 
-func _on_Map_try_to_place_unit(coordinate):
-  execute_command(funcref(self, "command_place_unit"), { "coordinate": coordinate })
+func _on_Map_try_to_place_unit(hex):
+  execute_command(funcref(self, "command_place_unit"), { "hex": hex })
+
+
+func _on_Map_try_to_move_unit(unit, hex):
+  execute_command(funcref(self, "command_move_unit"), { "hex": hex, "unit": unit })

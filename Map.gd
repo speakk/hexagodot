@@ -12,7 +12,7 @@ export(MapTools.MapShape) var map_shape
 export(int) var map_radius = 7
 
 # coordinate key -> unit
-var unit_map: Dictionary = {}
+#var unit_map: Dictionary = {}
 
 var hexes: Dictionary = {}
 
@@ -52,31 +52,29 @@ func _process(dt):
 
 func _on_hex_clicked(hex: Hex):
   var coordinate = hex.to_coordinate()
-  if unit_map.has(coordinate.get_key()):
-    for key in unit_map:
-      unit_map[key].deselect()
-    select_unit(coordinate)
+  var hex_units = hexes[coordinate.to_int()].get_node("Units").get_children()
+  if hex_units.size() > 0:
+    for key in hexes:
+      var other_hex = hexes[key]
+      for unit in other_hex.get_node("Units").get_children():
+        unit.deselect()
+    select_unit(hex_units[0])
   else:
     if selected_unit:
       move_unit(selected_unit, coordinate)
     else:
-      emit_signal("try_to_place_unit", coordinate)
+      emit_signal("try_to_place_unit", hex)
     
 func _on_hex_hovered(hex: Hex):
   if selected_unit:
-    var from_coord
-    for key in unit_map:
-      if unit_map[key] == selected_unit:
-        from_coord = Coordinate.new().set_from_key(key)
-        break
-        
+    var from_coord = selected_unit.get_coordinate()
     hilighted_path = astar.get_id_path(hex.to_coordinate().to_int(), from_coord.to_int())
 
-func place_unit(unit):
-  add_child(unit)
+func place_unit(unit, hex):
+  hex.get_node("Units").add_child(unit)
+  print("Placed ", unit)
 
-func select_unit(coordinate: Coordinate):
-  var unit = unit_map.get(coordinate.get_key())
+func select_unit(unit):
   unit.select()
   selected_unit = unit
   
