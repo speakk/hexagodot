@@ -39,7 +39,7 @@ func command_move_unit(args):
   var tween = $PathTween
   
   path.invert()
-  var index = 0
+  var index = 1 # Skip first one as it's the original position
   #unit.set_as_toplevel(true)
   while index < path.size():
     print("Index, path %s %s" % [index, path])
@@ -53,7 +53,7 @@ func command_move_unit(args):
       "position",
       from,
       to - original,
-      1
+      0.05
     )
     tween.start()
     print("Started, waiting...")
