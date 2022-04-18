@@ -62,7 +62,7 @@ func _on_hex_clicked(hex: Hex):
     select_unit(hex_units[0])
   else:
     if selected_unit:
-      emit_signal("try_to_move_unit", selected_unit, hex)
+      emit_signal("try_to_move_unit", selected_unit, hex, hilighted_path)
     else:
       emit_signal("try_to_place_unit", hex)
     

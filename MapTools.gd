@@ -70,6 +70,8 @@ static func axial_round(fraq_q: float, fraq_r: float) -> Coordinate:
 static func pointy_hex_to_pixel(coordinate: Coordinate) -> Vector2:
   var q = coordinate.q
   var r = coordinate.r
+  print("Convering to pixel, %s, %s" % [q, r])
+  
   var x = (POINTY_HEX_MATRIX.f0 * q + POINTY_HEX_MATRIX.f1 * r) * HEX_LAYOUT_SIZE_X;
   var y = (POINTY_HEX_MATRIX.f2 * q + POINTY_HEX_MATRIX.f3 * r) * HEX_LAYOUT_SIZE_Y;
 

@@ -14,6 +14,7 @@ signal hex_hovered(Hex)
 func init(_q, _r):
   q = _q
   r = _r
+
   MapTools.move_entity_to_coordinate(self, Coordinate.new(_q, _r))
   return self
 
