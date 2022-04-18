@@ -64,8 +64,8 @@ func command_move_unit(args):
 func command_attack(args):
   print("Attack!")
   yield($Map.animate_unit_attack(args), "completed")
-  
   yield(get_tree(), "idle_frame")
+  args.against.take_damage(args.by.damage_amount)
   
 
 func _on_Map_try_to_place_unit(hex):
