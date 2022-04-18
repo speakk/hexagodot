@@ -38,19 +38,21 @@ func command_move_unit(args):
   
   var tween = $PathTween
   
+  path.invert()
   var index = 0
-  unit.set_as_toplevel(true)
+  #unit.set_as_toplevel(true)
   while index < path.size():
     print("Index, path %s %s" % [index, path])
     var coordinate = Coordinate.new().from_int(path[index])
-    var from = MapTools.pointy_hex_to_pixel(unit_coord)
+    var original = MapTools.pointy_hex_to_pixel(unit_coord)
+    var from = unit.position
     var to = MapTools.pointy_hex_to_pixel(coordinate)
     print(unit_coord.q, hex.q)
     print("from: %s, to: %s" % [from, to])
     tween.interpolate_property(unit,
-      "absolute_position",
+      "position",
       from,
-      to,
+      to - original,
       1
     )
     tween.start()
