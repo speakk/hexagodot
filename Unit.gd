@@ -28,3 +28,7 @@ func select():
 func deselect():
   selected = false
   $SelectRing.visible = false
+
+func set_team(_team):
+  team = _team
+  $TeamIcon.color = team.color

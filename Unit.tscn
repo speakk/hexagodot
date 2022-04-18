@@ -22,3 +22,6 @@ texture = ExtResource( 1 )
 light_mask = 2
 occluder = SubResource( 1 )
 light_mask = 2
+
+[node name="TeamIcon" type="Polygon2D" parent="."]
+polygon = PoolVector2Array( 9, -3, 9, 0, 12, 0, 12, -3 )

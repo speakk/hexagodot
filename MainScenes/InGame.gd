@@ -8,10 +8,11 @@ const TEAM = preload("res://Team.tscn")
 signal team_added(team)
 signal turn_started(teams, team)
 
-func add_team(name, controller):
-  var team = TEAM.instance().init(name, controller)
+func add_team(name, controller, color):
+  var team = TEAM.instance().init(name, controller, color, $Map)
   $Teams.add_child(team)
   team.connect("team_turn_finished", self, "end_turn")
+  team.connect("try_to_place_unit", self, "_on_Map_try_to_place_unit")
   emit_signal("team_added", team)
 
 func start_turn(team):
@@ -20,8 +21,8 @@ func start_turn(team):
   emit_signal("turn_started", $Teams, team)
 
 func prep_teams():
-  add_team("Player 1", Team.ControllerType.PLAYER)
-  add_team("AI 1", Team.ControllerType.AI)
+  add_team("Player 1", Team.ControllerType.PLAYER, Color(0, 1, 0))
+  add_team("AI 1", Team.ControllerType.AI, Color(0, 0, 1))
   
   current_team_index = 0
   var current_team = $Teams.get_child(current_team_index)
@@ -34,10 +35,14 @@ func prep_ui():
 func _ready():
   prep_ui()
   prep_teams()
+  
+func _process(delta):
+  if Input.is_action_just_pressed("player_end_turn"):
+    _on_InGameUI_player_end_turn_pressed()
 
 func execute_command(command_func: FuncRef, args):
     #$CommandSequencer.execute_command(command_func, args)
-    command_func.call_func(args)
+    yield(command_func.call_func(args), "completed")
 
 func execute_commands(commands: Array):
   for command in commands:
@@ -46,19 +51,43 @@ func execute_commands(commands: Array):
 func command_place_unit(args):
     var hex = args.hex
     var unit = UNIT.instance().init(hex.q, hex.r)
-    unit.team = $Teams.get_child(current_team_index)
+    unit.set_team($Teams.get_child(current_team_index))
     unit.add_to_group("in_team")
     $Map.place_unit(unit, hex)
+    yield(get_tree(), "idle_frame")
     
 func command_move_unit(args):
   yield($Map.animate_unit_move(args), "completed")
   $Map.place_unit(args.unit, args.hex)
+  yield(get_tree(), "idle_frame")
+  
+
+func command_attack(args):
+  print("ATTAAAACK!")
+  yield(get_tree(), "idle_frame")
+  
 
 func _on_Map_try_to_place_unit(hex):
   execute_command(funcref(self, "command_place_unit"), { "hex": hex })
 
 func _on_Map_try_to_move_unit(unit, hex, path):
   execute_command(funcref(self, "command_move_unit"), { "hex": hex, "unit": unit, "path": path })
+
+func _on_try_to_move_and_attack(by, against, path):
+  # Target hex is one before last (last is enemy location
+  # TODO: Make unit stop where their range is maybe
+  path.resize(path.size()-1)
+  var target_hex = $Map.hexes[path[path.size()-1]]
+  execute_commands([
+    {
+      "func_ref": funcref(self, "command_move_unit"),
+      "args": { "hex": target_hex, "unit": by, "path": path }
+     },
+    {
+      "func_ref": funcref(self, "command_attack"),
+      "args": { "by": by, "against": against }
+     }
+   ])
 
 func end_turn():
   print("Ending turn for team %s" % $Teams.get_child(current_team_index).team_name)

@@ -19,6 +19,7 @@ position = Vector2( 359, 237 )
 
 [node name="InGameUI" parent="." instance=ExtResource( 3 )]
 
+[connection signal="try_to_move_and_attack" from="Map" to="." method="_on_try_to_move_and_attack"]
 [connection signal="try_to_move_unit" from="Map" to="." method="_on_Map_try_to_move_unit"]
 [connection signal="try_to_place_unit" from="Map" to="." method="_on_Map_try_to_place_unit"]
 [connection signal="player_end_turn_pressed" from="InGameUI" to="." method="_on_InGameUI_player_end_turn_pressed"]

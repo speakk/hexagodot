@@ -4,6 +4,7 @@ class_name Map
 
 signal try_to_place_unit(coordinate)
 signal try_to_move_unit(unit, hex)
+signal try_to_move_and_attack(by, against)
 
 const HEX = preload("Hex.tscn")
 const UNIT = preload("Unit.tscn")
@@ -55,11 +56,15 @@ func _on_hex_clicked(hex: Hex):
   var hex_units = hexes[coordinate.to_int()].get_node("Units").get_children()
   print("Hex units size", hex_units.size())
   if hex_units.size() > 0:
-    for key in hexes:
-      var other_hex = hexes[key]
-      for unit in other_hex.get_node("Units").get_children():
-        unit.deselect()
-    select_unit(hex_units[0])
+    var existing_unit = hex_units[0]
+    if not selected_unit or existing_unit.team == selected_unit.team:
+      for key in hexes:
+        var other_hex = hexes[key]
+        for unit in other_hex.get_node("Units").get_children():
+          unit.deselect()
+      select_unit(existing_unit)
+    elif selected_unit:
+      emit_signal("try_to_move_and_attack", selected_unit, existing_unit, hilighted_path)
   else:
     if selected_unit:
       emit_signal("try_to_move_unit", selected_unit, hex, hilighted_path)
@@ -69,7 +74,7 @@ func _on_hex_clicked(hex: Hex):
 func _on_hex_hovered(hex: Hex):
   if selected_unit:
     var from_coord = selected_unit.get_coordinate()
-    hilighted_path = astar.get_id_path(hex.to_coordinate().to_int(), from_coord.to_int())
+    hilighted_path = astar.get_id_path(from_coord.to_int(), hex.to_coordinate().to_int())
 
 func place_unit(unit, hex):
   if unit.get_parent():
@@ -92,11 +97,11 @@ func animate_unit_move(args):
   if existing_path:
     path = existing_path
   else:
-    path = $Map.astar.get_id_path(hex.to_coordinate().to_int(), unit_coord.to_int())
+    path = $Map.astar.get_id_path(unit_coord.to_int(), hex.to_coordinate().to_int())
+    #path.invert()
   
   var tween = $PathTween
   
-  path.invert()
   var index = 1 # Skip first one as it's the original position
   #unit.set_as_toplevel(true)
   while index < path.size():
