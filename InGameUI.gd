@@ -20,6 +20,10 @@ func on_turn_started(teams, current_team):
       label.text = label.text + " <"
     $Teams.add_child(label)
 
+  if current_team.controller == Team.ControllerType.PLAYER:
+    $EndTurnButton.visible = true
+  else:
+    $EndTurnButton.visible = false
 
 func _on_EndTurnButton_pressed():
   emit_signal("player_end_turn_pressed")
