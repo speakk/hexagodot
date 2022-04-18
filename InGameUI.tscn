@@ -16,8 +16,18 @@ margin_right = 392.0
 margin_bottom = 456.0
 text = "End Turn"
 
+[node name="Label" type="Label" parent="."]
+margin_left = 24.0
+margin_top = 16.0
+margin_right = 152.0
+margin_bottom = 29.0
+text = "TEAMS:"
+
 [node name="Teams" type="VBoxContainer" parent="."]
-margin_right = 128.0
-margin_bottom = 64.0
+margin_left = 24.0
+margin_top = 32.0
+margin_right = 152.0
+margin_bottom = 72.0
+custom_constants/separation = 0
 
 [connection signal="pressed" from="EndTurnButton" to="." method="_on_EndTurnButton_pressed"]

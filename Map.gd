@@ -121,8 +121,35 @@ func animate_unit_move(args):
     print("Tween completed")
     
     index = index + 1
-    
-  #$Map.place_unit(unit, hex)
+  
+  # Safeguard in case no distance was traveled
+  yield(get_tree(), "idle_frame")
+
+func animate_unit_attack(args):
+  var by = args.by
+  var against = args.against
+  
+  var original_position = Vector2(by.global_position)
+  
+  var tween = $PathTween
+  tween.interpolate_property(by,
+      "global_position",
+      by.global_position,
+      against.global_position,
+      0.1
+    )
+  tween.start()
+  yield(tween, "tween_completed")
+  tween.interpolate_property(by,
+      "global_position",
+      by.global_position,
+      original_position,
+      0.2,
+      Tween.EASE_OUT
+    )
+  tween.start()
+  yield(tween, "tween_completed")
+  
 
 func select_unit(unit):
   unit.select()

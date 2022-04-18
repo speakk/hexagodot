@@ -61,9 +61,10 @@ func command_move_unit(args):
   $Map.place_unit(args.unit, args.hex)
   yield(get_tree(), "idle_frame")
   
-
 func command_attack(args):
-  print("ATTAAAACK!")
+  print("Attack!")
+  yield($Map.animate_unit_attack(args), "completed")
+  
   yield(get_tree(), "idle_frame")
   
 

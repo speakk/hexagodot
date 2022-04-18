@@ -21,9 +21,9 @@ func on_turn_started(teams, current_team):
     $Teams.add_child(label)
 
   if current_team.controller == Team.ControllerType.PLAYER:
-    $EndTurnButton.visible = true
+    $EndTurnButton.disabled = false
   else:
-    $EndTurnButton.visible = false
+    $EndTurnButton.disabled = true
 
 func _on_EndTurnButton_pressed():
   emit_signal("player_end_turn_pressed")
