@@ -79,6 +79,45 @@ func place_unit(unit, hex):
   unit.z_index = 1
   unit.place(hex.q, hex.r)
   clear_last_selected()
+  
+func animate_unit_move(args):
+  print("command_move_unit")
+  var hex = args.hex
+  var unit = args.unit
+  var unit_coord = Coordinate.new(unit.q, unit.r)
+  
+  var existing_path = args.path
+  var path
+  
+  if existing_path:
+    path = existing_path
+  else:
+    path = $Map.astar.get_id_path(hex.to_coordinate().to_int(), unit_coord.to_int())
+  
+  var tween = $PathTween
+  
+  path.invert()
+  var index = 1 # Skip first one as it's the original position
+  #unit.set_as_toplevel(true)
+  while index < path.size():
+    var coordinate = Coordinate.new().from_int(path[index])
+    var original = MapTools.pointy_hex_to_pixel(unit_coord)
+    var from = unit.position
+    var to = MapTools.pointy_hex_to_pixel(coordinate)
+    tween.interpolate_property(unit,
+      "position",
+      from,
+      to - original,
+      0.05
+    )
+    tween.start()
+    print("Started, waiting...")
+    yield(tween, "tween_completed")
+    print("Tween completed")
+    
+    index = index + 1
+    
+  #$Map.place_unit(unit, hex)
 
 func select_unit(unit):
   unit.select()

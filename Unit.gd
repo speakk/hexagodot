@@ -19,7 +19,6 @@ func place(_q, _r):
   r = _r
   
 func get_coordinate():
-  print("get", q, r)
   return Coordinate.new(q, r)
 
 func select():

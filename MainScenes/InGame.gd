@@ -23,45 +23,8 @@ func command_place_unit(args):
     $Map.place_unit(unit, hex)
     
 func command_move_unit(args):
-  print("command_move_unit")
-  var hex = args.hex
-  var unit = args.unit
-  var unit_coord = Coordinate.new(unit.q, unit.r)
-  
-  var existing_path = args.path
-  var path
-  
-  if existing_path:
-    path = existing_path
-  else:
-    path = $Map.astar.get_id_path(hex.to_coordinate().to_int(), unit_coord.to_int())
-  
-  var tween = $PathTween
-  
-  path.invert()
-  var index = 1 # Skip first one as it's the original position
-  #unit.set_as_toplevel(true)
-  while index < path.size():
-    print("Index, path %s %s" % [index, path])
-    var coordinate = Coordinate.new().from_int(path[index])
-    var original = MapTools.pointy_hex_to_pixel(unit_coord)
-    var from = unit.position
-    var to = MapTools.pointy_hex_to_pixel(coordinate)
-    print(unit_coord.q, hex.q)
-    print("from: %s, to: %s" % [from, to])
-    tween.interpolate_property(unit,
-      "position",
-      from,
-      to - original,
-      0.05
-    )
-    tween.start()
-    print("Started, waiting...")
-    yield(tween, "tween_completed")
-    print("Completed")
-    index = index + 1
-    
-  $Map.place_unit(unit, hex)
+  yield($Map.animate_unit_move(args), "completed")
+  $Map.place_unit(args.unit, args.hex)
 
 func _on_Map_try_to_place_unit(hex):
   execute_command(funcref(self, "command_place_unit"), { "hex": hex })

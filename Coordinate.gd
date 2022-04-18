@@ -16,7 +16,6 @@ func set_from_key(key: String):
   var elements = key.split_floats("_")
   q = elements[0]
   r = elements[1]
-  print("set from key", q, r)
   return self
 
 var top = 1000
