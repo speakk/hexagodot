@@ -82,7 +82,12 @@ func select_unit(unit):
   unit.select()
   selected_unit = unit
   
+func get_current_team():
+  return $Teams.get_child(current_team_index)
+
 func handle_hex_click(hex, existing_path):
+  if get_current_team().controller == Team.ControllerType.AI:
+    return
   var coordinate = hex.to_coordinate()
   var hex_units = hex.get_node("Units").get_children()
   print("Hex units size", hex_units.size())
