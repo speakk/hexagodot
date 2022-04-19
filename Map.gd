@@ -59,6 +59,7 @@ func _on_hex_hovered(hex: Hex):
   emit_signal("hex_hovered", hex)
 
 func hilight_path(from, to):
+  print("Doing the hilight?")
   hilighted_path = astar.get_id_path(from.to_int(), to.to_int())
 
 func get_astar_path(from: Coordinate, to: Coordinate):

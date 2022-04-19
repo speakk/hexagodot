@@ -59,7 +59,7 @@ func command_place_unit(args):
     
 func command_move_unit(args):
   yield($Map.animate_unit_move(args), "completed")
-  $Map.place_unit(args.unit, args.hex)
+  place_unit(args.unit, args.hex)
   yield(get_tree(), "idle_frame")
   
 func command_attack(args):
@@ -78,7 +78,9 @@ func handle_hex_click(hex, existing_path):
   print("Hex units size", hex_units.size())
   if hex_units.size() > 0:
     var existing_unit = hex_units[0]
-    if not selected_unit or existing_unit.team == selected_unit.team:
+    
+    # No unit selected, or 
+    if not (selected_unit or $Teams.get_child(current_team_index) != existing_unit.team):
       for key in $Map.hexes:
         var other_hex = $Map.hexes[key]
         for unit in other_hex.get_node("Units").get_children():
