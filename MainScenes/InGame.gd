@@ -96,7 +96,7 @@ func handle_hex_click(hex, existing_path):
         for unit in other_hex.get_node("Units").get_children():
           unit.deselect()
       select_unit(existing_unit)
-    elif selected_unit:
+    elif selected_unit and $Teams.get_child(current_team_index) != existing_unit.team:
       try_to_move_and_attack(selected_unit, existing_unit, existing_path)
   else:
     if selected_unit:

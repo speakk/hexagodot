@@ -2,6 +2,8 @@ extends Node2D
 
 class_name Unit
 
+signal unit_died(unit)
+
 var team
 
 export var q: int
@@ -10,6 +12,7 @@ export var selected: bool = false
 export var health: int = 4 setget _set_health
 export var max_health: int = health
 export var damage_amount: int = 1
+export var alive: bool = true
 
 var unit_type
 
@@ -43,6 +46,9 @@ func set_team(_team):
 
 func take_damage(amount):
   _set_health(health - amount)
+  if health <= 0:
+    alive = false
+    self.queue_free()
   
 func _set_health(value):
   health = value
