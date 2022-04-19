@@ -28,6 +28,15 @@ func prep_teams():
   current_team_index = 0
   var current_team = $Teams.get_child(current_team_index)
   start_turn(current_team)
+
+func create_hero():
+  for team in $Teams.get_children():
+    if team.controller == Team.ControllerType.PLAYER:
+      var hex = $Map.hexes.values()[randi() % $Map.hexes.size()]
+      var hero = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.HERO)
+      hero.set_team($Teams.get_child(current_team_index))
+      hero.add_to_group("in_team")
+      place_unit(hero, hex)
   
 func prep_ui():
   self.connect("team_added", $InGameUI, "on_team_added")
@@ -36,6 +45,7 @@ func prep_ui():
 func _ready():
   prep_ui()
   prep_teams()
+  create_hero()
   
 func _process(delta):
   if Input.is_action_just_pressed("player_end_turn"):
@@ -51,7 +61,7 @@ func execute_commands(commands: Array):
 
 func command_place_unit(args):
     var hex = args.hex
-    var unit = UNIT.instance().init(hex.q, hex.r)
+    var unit = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.SKELLY)
     unit.set_team($Teams.get_child(current_team_index))
     unit.add_to_group("in_team")
     place_unit(unit, hex)

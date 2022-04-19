@@ -10,27 +10,33 @@ outline_color = Color( 0, 0, 0, 0.352941 )
 font_data = ExtResource( 2 )
 
 [sub_resource type="StyleBoxFlat" id=4]
-bg_color = Color( 0.529412, 0.262745, 0.423529, 1 )
+bg_color = Color( 0.788235, 0.411765, 0.635294, 1 )
 border_width_right = 4
-border_color = Color( 0.733333, 0.329412, 0.517647, 1 )
-corner_radius_top_right = 10
-corner_radius_bottom_left = 15
+border_color = Color( 1, 0.658824, 0.815686, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 anti_aliasing = false
 
 [sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 0.403922, 0.215686, 0.329412, 1 )
+bg_color = Color( 0.568627, 0.278431, 0.45098, 1 )
 border_width_right = 4
-border_color = Color( 0.733333, 0.329412, 0.517647, 1 )
-corner_radius_top_right = 10
-corner_radius_bottom_left = 15
+border_color = Color( 1, 0.658824, 0.815686, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 anti_aliasing = false
 
 [sub_resource type="StyleBoxFlat" id=5]
-bg_color = Color( 0.329412, 0.160784, 0.262745, 1 )
+bg_color = Color( 0.470588, 0.211765, 0.364706, 1 )
 border_width_right = 4
-border_color = Color( 0.733333, 0.329412, 0.517647, 1 )
-corner_radius_top_right = 10
-corner_radius_bottom_left = 15
+border_color = Color( 1, 0.658824, 0.815686, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 anti_aliasing = false
 
 [sub_resource type="DynamicFont" id=1]

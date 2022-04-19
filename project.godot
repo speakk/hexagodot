@@ -69,6 +69,7 @@ config/icon="res://icon.png"
 [autoload]
 
 SceneManager="*res://SceneManager.tscn"
+UnitDB="*res://UnitDB.gd"
 
 [display]
 

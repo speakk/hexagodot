@@ -11,10 +11,13 @@ export var health: int = 4 setget _set_health
 export var max_health: int = health
 export var damage_amount: int = 1
 
-func init(_q, _r):
+var unit_type
+
+func init(_q, _r, type):
   q = _q
   r = _r
-  #MapTools.move_entity_to_coordinate(self, Coordinate.new(_q, _r))
+  unit_type = type
+  UnitDB.load_db_values(self, type)
   $HealthBar.max_value = max_health
   $HealthBar.value = health
   return self
