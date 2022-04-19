@@ -1,6 +1,7 @@
 extends Node2D
 
 var current_team_index
+var selected_unit
 
 const UNIT = preload("res://Unit.tscn")
 const TEAM = preload("res://Team.tscn")
@@ -12,7 +13,7 @@ func add_team(name, controller, color):
   var team = TEAM.instance().init(name, controller, color, $Map)
   $Teams.add_child(team)
   team.connect("team_turn_finished", self, "end_turn")
-  team.connect("try_to_place_unit", self, "_on_Map_try_to_place_unit")
+  team.connect("try_to_place_unit", self, "try_to_place_unit")
   emit_signal("team_added", team)
 
 func start_turn(team):
@@ -53,7 +54,7 @@ func command_place_unit(args):
     var unit = UNIT.instance().init(hex.q, hex.r)
     unit.set_team($Teams.get_child(current_team_index))
     unit.add_to_group("in_team")
-    $Map.place_unit(unit, hex)
+    place_unit(unit, hex)
     yield(get_tree(), "idle_frame")
     
 func command_move_unit(args):
@@ -67,14 +68,38 @@ func command_attack(args):
   yield(get_tree(), "idle_frame")
   args.against.take_damage(args.by.damage_amount)
   
+func select_unit(unit):
+  unit.select()
+  selected_unit = unit
+  
+func handle_hex_click(hex, existing_path):
+  var coordinate = hex.to_coordinate()
+  var hex_units = hex.get_node("Units").get_children()
+  print("Hex units size", hex_units.size())
+  if hex_units.size() > 0:
+    var existing_unit = hex_units[0]
+    if not selected_unit or existing_unit.team == selected_unit.team:
+      for key in $Map.hexes:
+        var other_hex = $Map.hexes[key]
+        for unit in other_hex.get_node("Units").get_children():
+          unit.deselect()
+      select_unit(existing_unit)
+    elif selected_unit:
+      try_to_move_and_attack(selected_unit, existing_unit, existing_path)
+  else:
+    if selected_unit:
+      try_to_move_unit(selected_unit, hex, existing_path)
+    else:
+      try_to_place_unit(hex)
+  
 
-func _on_Map_try_to_place_unit(hex):
+func try_to_place_unit(hex):
   execute_command(funcref(self, "command_place_unit"), { "hex": hex })
 
-func _on_Map_try_to_move_unit(unit, hex, path):
+func try_to_move_unit(unit, hex, path):
   execute_command(funcref(self, "command_move_unit"), { "hex": hex, "unit": unit, "path": path })
 
-func _on_try_to_move_and_attack(by, against, path):
+func try_to_move_and_attack(by, against, path):
   # Target hex is one before last (last is enemy location
   # TODO: Make unit stop where their range is maybe
   path.resize(path.size()-1)
@@ -90,6 +115,23 @@ func _on_try_to_move_and_attack(by, against, path):
      }
    ])
 
+
+func clear_last_selected():
+  if selected_unit:
+    selected_unit.deselect()
+    selected_unit = null
+  
+  $Map.hilighted_path = null
+
+func place_unit(unit, hex):
+  if unit.get_parent():
+    unit.get_parent().remove_child(unit)
+  hex.get_node("Units").add_child(unit)
+  unit.global_position = hex.global_position
+  unit.z_index = 1
+  unit.place(hex.q, hex.r)
+  clear_last_selected()
+
 func end_turn():
   print("Ending turn for team %s" % $Teams.get_child(current_team_index).team_name)
   current_team_index = (current_team_index + 1) % $Teams.get_child_count()
@@ -102,3 +144,11 @@ func _on_InGameUI_player_end_turn_pressed():
   if current_team.controller == Team.ControllerType.PLAYER:
     #current_team.emit_signal("team_turn_finished", current_team)
     end_turn()
+
+func _on_Map_hex_clicked(hex, existing_path):
+  handle_hex_click(hex, existing_path)
+
+func _on_Map_hex_hovered(hex):
+  if selected_unit:
+    var from_coord = selected_unit.get_coordinate()
+    $Map.hilight_path(from_coord, hex.to_coordinate())

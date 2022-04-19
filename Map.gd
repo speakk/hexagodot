@@ -2,9 +2,11 @@ extends YSort
 
 class_name Map
 
-signal try_to_place_unit(coordinate)
-signal try_to_move_unit(unit, hex)
-signal try_to_move_and_attack(by, against)
+#signal try_to_place_unit(coordinate)
+#signal try_to_move_unit(unit, hex)
+#signal try_to_move_and_attack(by, against)
+signal hex_clicked(hex)
+signal hex_hovered(hex)
 
 const HEX = preload("Hex.tscn")
 const UNIT = preload("Unit.tscn")
@@ -21,7 +23,6 @@ var astar = AStar2D.new()
 
 var hilighted_path
 
-var selected_unit
 
 func _ready():
   var coordinates = MapTools.create_grid(map_radius, map_shape)
@@ -52,38 +53,17 @@ func _process(dt):
       
 
 func _on_hex_clicked(hex: Hex):
-  var coordinate = hex.to_coordinate()
-  var hex_units = hexes[coordinate.to_int()].get_node("Units").get_children()
-  print("Hex units size", hex_units.size())
-  if hex_units.size() > 0:
-    var existing_unit = hex_units[0]
-    if not selected_unit or existing_unit.team == selected_unit.team:
-      for key in hexes:
-        var other_hex = hexes[key]
-        for unit in other_hex.get_node("Units").get_children():
-          unit.deselect()
-      select_unit(existing_unit)
-    elif selected_unit:
-      emit_signal("try_to_move_and_attack", selected_unit, existing_unit, hilighted_path)
-  else:
-    if selected_unit:
-      emit_signal("try_to_move_unit", selected_unit, hex, hilighted_path)
-    else:
-      emit_signal("try_to_place_unit", hex)
-    
+  emit_signal("hex_clicked", hex, hilighted_path)
+  
 func _on_hex_hovered(hex: Hex):
-  if selected_unit:
-    var from_coord = selected_unit.get_coordinate()
-    hilighted_path = astar.get_id_path(from_coord.to_int(), hex.to_coordinate().to_int())
+  emit_signal("hex_hovered", hex)
 
-func place_unit(unit, hex):
-  if unit.get_parent():
-    unit.get_parent().remove_child(unit)
-  hex.get_node("Units").add_child(unit)
-  unit.global_position = hex.global_position
-  unit.z_index = 1
-  unit.place(hex.q, hex.r)
-  clear_last_selected()
+func hilight_path(from, to):
+  hilighted_path = astar.get_id_path(from.to_int(), to.to_int())
+
+func get_astar_path(from: Coordinate, to: Coordinate):
+  return astar.get_id_path(from.to_int(), to.to_int())
+
   
 func animate_unit_move(args):
   print("command_move_unit")
@@ -149,18 +129,3 @@ func animate_unit_attack(args):
     )
   tween.start()
   yield(tween, "tween_completed")
-  
-
-func select_unit(unit):
-  unit.select()
-  selected_unit = unit
-  
-func move_unit(unit, to):
-  pass
-
-func clear_last_selected():
-  if selected_unit:
-    selected_unit.deselect()
-    selected_unit = null
-  
-  hilighted_path = null
