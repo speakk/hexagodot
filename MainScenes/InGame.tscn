@@ -19,6 +19,4 @@ position = Vector2( 359, 237 )
 
 [node name="InGameUI" parent="." instance=ExtResource( 3 )]
 
-[connection signal="hex_clicked" from="Map" to="." method="_on_Map_hex_clicked"]
-[connection signal="hex_hovered" from="Map" to="." method="_on_Map_hex_hovered"]
 [connection signal="player_end_turn_pressed" from="InGameUI" to="." method="_on_InGameUI_player_end_turn_pressed"]

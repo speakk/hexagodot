@@ -13,6 +13,8 @@ export var health: int = 4 setget _set_health
 export var max_health: int = health
 export var damage_amount: int = 1
 export var alive: bool = true
+export var movement_points: int = 5
+export var attack_points: int = 1
 
 var unit_type
 
@@ -23,11 +25,15 @@ func init(_q, _r, type):
   UnitDB.load_db_values(self, type)
   $HealthBar.max_value = max_health
   $HealthBar.value = health
+  $ActionBar.attack_points = attack_points
+  $ActionBar.movement_points = movement_points
   return self
   
-func place(_q, _r):
+func place(_q, _r, movement_points = 0):
   q = _q
   r = _r
+  if movement_points:
+    use_movement_points(movement_points)
   
 func get_coordinate():
   return Coordinate.new(q, r)
@@ -53,3 +59,10 @@ func take_damage(amount):
 func _set_health(value):
   health = value
   $HealthBar.value = health
+
+func _set_movement_points(value):
+  movement_points = value
+  $ActionBar.movement_points = movement_points
+
+func use_movement_points(amount):
+  _set_movement_points(movement_points - amount)

@@ -53,33 +53,26 @@ func _process(dt):
       
 
 func _on_hex_clicked(hex: Hex):
-  emit_signal("hex_clicked", hex, hilighted_path)
+  emit_signal("hex_clicked", hex)
   
 func _on_hex_hovered(hex: Hex):
   emit_signal("hex_hovered", hex)
 
-func hilight_path(from, to):
+func hilight_path(from, to, max_length):
   print("Doing the hilight?")
   hilighted_path = astar.get_id_path(from.to_int(), to.to_int())
+  hilighted_path.resize(min(hilighted_path.size(), max_length))
+  return hilighted_path
 
 func get_astar_path(from: Coordinate, to: Coordinate):
   return astar.get_id_path(from.to_int(), to.to_int())
-
   
 func animate_unit_move(args):
   print("command_move_unit")
-  var hex = args.hex
   var unit = args.unit
   var unit_coord = Coordinate.new(unit.q, unit.r)
   
-  var existing_path = args.path
-  var path
-  
-  if existing_path:
-    path = existing_path
-  else:
-    path = $Map.astar.get_id_path(unit_coord.to_int(), hex.to_coordinate().to_int())
-    #path.invert()
+  var path = args.path
   
   var tween = $PathTween
   

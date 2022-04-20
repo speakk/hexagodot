@@ -71,6 +71,10 @@ config/icon="res://icon.png"
 SceneManager="*res://SceneManager.tscn"
 UnitDB="*res://UnitDB.gd"
 
+[debug]
+
+gdscript/warnings/unused_class_variable=true
+
 [display]
 
 window/size/width=720
