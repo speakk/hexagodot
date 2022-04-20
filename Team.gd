@@ -22,7 +22,17 @@ func init(_name: String, _controller: int, _color: Color, _map):
   map = _map
   return self
 
+func reset_unit_points():
+  print("Resetting unit points")
+  var units = get_tree().get_nodes_in_group("unit_in_team")
+  for unit in units:
+    print("Checking if in group for team name: %s" % team_name)
+    if unit.is_in_group(team_name):
+      print("Resetting points!")
+      unit.reset_points()
+
 func start_turn():
+  reset_unit_points()
   if controller == ControllerType.PLAYER:
     print("PLAYER TURN HAS STARTED")
     pass

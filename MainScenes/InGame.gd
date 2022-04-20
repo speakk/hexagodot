@@ -25,18 +25,13 @@ func start_turn(team):
 func prep_teams():
   add_team("Player 1", Team.ControllerType.PLAYER, Color(0, 1, 0))
   add_team("AI 1", Team.ControllerType.AI, Color(0, 0, 1))
-  
-  current_team_index = 0
-  var current_team = $Teams.get_child(current_team_index)
-  start_turn(current_team)
 
 func create_hero():
   for team in $Teams.get_children():
     if team.controller == Team.ControllerType.PLAYER:
       var hex = $Map.hexes.values()[randi() % $Map.hexes.size()]
       var hero = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.HERO)
-      hero.set_team($Teams.get_child(current_team_index))
-      hero.add_to_group("in_team")
+      hero.set_team(team)
       place_unit(hero, hex)
   
 func prep_ui():
@@ -49,6 +44,10 @@ func _ready():
   create_hero()
   $Map.connect("hex_clicked", self, "_on_Map_hex_clicked")
   $Map.connect("hex_hovered", self, "_on_Map_hex_hovered")
+  
+  current_team_index = 0
+  var current_team = get_current_team()
+  start_turn(current_team)
   
 func _process(_delta):
   if Input.is_action_just_pressed("player_end_turn"):
@@ -107,13 +106,13 @@ func handle_hex_click(hex):
     var existing_unit = hex_units[0]
     
     # No unit selected, or 
-    if not (selected_unit or $Teams.get_child(current_team_index) != existing_unit.team):
+    if not (selected_unit or get_current_team() != existing_unit.team):
       for key in $Map.hexes:
         var other_hex = $Map.hexes[key]
         for unit in other_hex.get_node("Units").get_children():
           unit.deselect()
       select_unit(existing_unit)
-    elif selected_unit and $Teams.get_child(current_team_index) != existing_unit.team and last_hilighted_path:
+    elif selected_unit and get_current_team() != existing_unit.team and last_hilighted_path:
       try_to_move_and_attack(selected_unit, existing_unit, last_hilighted_path)
   else:
     if selected_unit:
@@ -162,14 +161,14 @@ func place_unit(unit, hex, movement_points = 0):
   clear_last_selected()
 
 func end_turn():
-  print("Ending turn for team %s" % $Teams.get_child(current_team_index).team_name)
+  print("Ending turn for team %s" % get_current_team().team_name)
   current_team_index = (current_team_index + 1) % $Teams.get_child_count()
   print("Ending turn, new index %s" % current_team_index)
-  var current_team = $Teams.get_child(current_team_index)
+  var current_team = get_current_team()
   call_deferred("start_turn", current_team)
   
 func _on_InGameUI_player_end_turn_pressed():
-  var current_team = $Teams.get_child(current_team_index)
+  var current_team = get_current_team()
   if current_team.controller == Team.ControllerType.PLAYER:
     #current_team.emit_signal("team_turn_finished", current_team)
     end_turn()

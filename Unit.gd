@@ -14,7 +14,9 @@ export var max_health: int = health
 export var damage_amount: int = 1
 export var alive: bool = true
 export var movement_points: int = 5
+export var max_movement_points: int = movement_points
 export var attack_points: int = 1
+export var max_attack_points: int = attack_points
 
 var unit_type
 
@@ -46,8 +48,15 @@ func deselect():
   selected = false
   $SelectRing.visible = false
 
+func reset_points():
+  _set_movement_points(max_movement_points)
+  _set_attack_points(max_attack_points)
+
 func set_team(_team):
   team = _team
+  add_to_group("unit_in_team")
+  add_to_group(team.team_name)
+  print("Adding to name...", team.team_name)
   $TeamIcon.color = team.color
 
 func take_damage(amount):
@@ -66,3 +75,7 @@ func _set_movement_points(value):
 
 func use_movement_points(amount):
   _set_movement_points(movement_points - amount)
+
+func _set_attack_points(value):
+  attack_points = value
+  $ActionBar.attack_points = attack_points

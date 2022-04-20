@@ -28,3 +28,5 @@ func load_db_values(unit, type):
   unit.get_node("Sprite").texture = data.get("sprite")
   unit.movement_points = data.get("movement_points")
   unit.attack_points = data.get("attack_points")
+  unit.max_movement_points = unit.movement_points
+  unit.max_attack_points = unit.attack_points
