@@ -40,6 +40,7 @@ func prep_ui():
   self.connect("turn_started", $InGameUI, "on_turn_started")
 
 func _ready():
+  randomize()
   prep_ui()
   prep_teams()
   create_hero()
@@ -57,11 +58,17 @@ func _process(_delta):
 
 func execute_command(command_func: FuncRef, args):
     #$CommandSequencer.execute_command(command_func, args)
-    yield(command_func.call_func(args), "completed")
+    var result = yield(command_func.call_func(args), "completed")
+    return result
 
 func execute_commands(commands: Array):
   for command in commands:
-    yield(execute_command(command.func_ref, command.args), "completed")
+    var success = yield(execute_command(command.func_ref, command.args), "completed")
+    print("Command result %s for %s" % [success, command.func_ref.name])
+    if not success:
+      break
+  
+  return true
 
 func command_place_unit(args):
     var hex = args.hex
@@ -76,11 +83,12 @@ func command_move_unit(args):
   if args.path.size() == 0 || args.path.size() > args.unit.movement_points:
     yield(get_tree(), "idle_frame")
     print("UH, path size was over yea")
-    return
+    return false
     
   yield($Map.animate_unit_move(args), "completed")
   place_unit(args.unit, $Map.hexes[args.path[args.path.size()-1]], args.path.size())
   yield(get_tree(), "idle_frame")
+  return true
   
 func command_attack(args):
   print("Attack!")
@@ -96,30 +104,46 @@ func get_current_team():
   return $Teams.get_child(current_team_index)
 
 func handle_hex_click(hex):
+  print("handle_hex_click")
   if get_current_team().controller == Team.ControllerType.AI:
     return
+  
+  var original_target_hex = hex
   
   if last_hilighted_path:
     hex = $Map.hexes[last_hilighted_path[last_hilighted_path.size()-1]]
   
+  var target_original = original_target_hex == hex
+    
+  print("Had last hilighted path, picking the last hex from that")
+  
   var hex_units = hex.get_node("Units").get_children()
   print("Hex units size", hex_units.size())
   if hex_units.size() > 0:
+    print("There was a unit on the tile!")
     var existing_unit = hex_units[0]
     
-    # No unit selected, or 
-    if not (selected_unit or get_current_team() != existing_unit.team):
+    # No unit selected, or current team is same as unit in tile
+    if (not selected_unit) and get_current_team() == existing_unit.team:
+      print("No unit selected, or current team is same as unit in tile")
       for key in $Map.hexes:
         var other_hex = $Map.hexes[key]
         for unit in other_hex.get_node("Units").get_children():
           unit.deselect()
+        
+      print("So, selecting unit on tile")
       select_unit(existing_unit)
     elif selected_unit and get_current_team() != existing_unit.team and last_hilighted_path:
+      print("Already had a selected unit, and the new tile has a unit NOT on the same team, AND we have a last hilighted path")
+      print("Which means, ATTACK")
       try_to_move_and_attack(selected_unit, existing_unit, last_hilighted_path)
   else:
-    if selected_unit:
+    print("There was no unit on the newly selected tile!")
+    if selected_unit and last_hilighted_path:
+      print("We already have a unit selected, so try to move that one")
       try_to_move_unit(selected_unit, last_hilighted_path)
-    else:
+    elif not selected_unit:
+      print("No unit selected, so place a new one")
       try_to_place_unit(hex)
   
 
@@ -132,7 +156,8 @@ func try_to_move_unit(unit, path):
 func try_to_move_and_attack(by, against, path):
   # Target hex is one before last (last is enemy location
   # TODO: Make unit stop where their range is maybe
-  path.resize(path.size()-1)
+  #path.resize(path.size()-1)
+  #var target_hex = $Map.hexes[path[path.size()-1]]
   var target_hex = $Map.hexes[path[path.size()-1]]
   execute_commands([
     {
@@ -152,6 +177,7 @@ func clear_last_selected():
     selected_unit = null
   
   $Map.hilighted_path = null
+  last_hilighted_path = null
 
 func place_unit(unit, hex, movement_points = 0):
   var original_from = Coordinate.new(unit.q, unit.r)

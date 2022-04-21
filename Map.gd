@@ -63,13 +63,15 @@ func set_hilighted_path(_path):
   hilighted_path = _path
 
 func get_astar_path(from: Coordinate, to: Coordinate, max_length):
+  if max_length == 0:
+    return null
   var path = astar.get_id_path(from.to_int(), to.to_int())
   if max_length:
     path.resize(min(path.size(), max_length))  
   return path
   
 func animate_unit_move(args):
-  print("command_move_unit")
+  print("animate_unit_move")
   var unit = args.unit
   var unit_coord = Coordinate.new(unit.q, unit.r)
   
@@ -91,10 +93,7 @@ func animate_unit_move(args):
       0.05
     )
     tween.start()
-    print("Started, waiting...")
     yield(tween, "tween_completed")
-    print("Tween completed")
-    
     index = index + 1
   
   # Safeguard in case no distance was traveled
