@@ -9,6 +9,7 @@ const TEAM = preload("res://Team.tscn")
 
 signal team_added(team)
 signal turn_started(teams, team)
+signal unit_moved(from, to)
 
 func add_team(name, controller, color):
   var team = TEAM.instance().init(name, controller, color, $Map)
@@ -44,6 +45,7 @@ func _ready():
   create_hero()
   $Map.connect("hex_clicked", self, "_on_Map_hex_clicked")
   $Map.connect("hex_hovered", self, "_on_Map_hex_hovered")
+  self.connect("unit_moved", $Map, "_on_unit_moved")
   
   current_team_index = 0
   var current_team = get_current_team()
@@ -152,6 +154,7 @@ func clear_last_selected():
   $Map.hilighted_path = null
 
 func place_unit(unit, hex, movement_points = 0):
+  var original_from = Coordinate.new(unit.q, unit.r)
   if unit.get_parent():
     unit.get_parent().remove_child(unit)
   hex.get_node("Units").add_child(unit)
@@ -159,6 +162,7 @@ func place_unit(unit, hex, movement_points = 0):
   unit.z_index = 1
   unit.place(hex.q, hex.r, movement_points)
   clear_last_selected()
+  emit_signal("unit_moved", original_from, hex.to_coordinate())
 
 func end_turn():
   print("Ending turn for team %s" % get_current_team().team_name)
@@ -178,5 +182,26 @@ func _on_Map_hex_clicked(hex):
 
 func _on_Map_hex_hovered(hex):
   if selected_unit:
+    var coordinate = hex.to_coordinate()
     var from_coord = selected_unit.get_coordinate()
-    last_hilighted_path = $Map.hilight_path(from_coord, hex.to_coordinate(), selected_unit.movement_points)
+    var existing_units = hex.get_units()
+    
+    if existing_units.size() == 0:
+      last_hilighted_path = $Map.get_astar_path(from_coord, coordinate, selected_unit.movement_points)
+      $Map.set_hilighted_path(last_hilighted_path)
+    else:
+      var potential_paths = []
+      var neighbor_directions = MapTools.get_neighbor_directions()
+      for neighbor_direction in neighbor_directions:
+        var neighbor_coordinate = MapTools.coordinate_add(coordinate, neighbor_direction)
+        if $Map.astar.has_point(neighbor_coordinate.to_int()):
+          potential_paths.push_back($Map.get_astar_path(from_coord, neighbor_coordinate, selected_unit.movement_points))
+      
+      var shortest_path
+      for potential_path in potential_paths:
+        if not shortest_path or potential_path.size() < shortest_path.size():
+          shortest_path = potential_path
+      
+      print("Alright found the shortest path")
+      last_hilighted_path = shortest_path
+      $Map.set_hilighted_path(last_hilighted_path)

@@ -10,6 +10,7 @@ var hovered = false
 
 signal hex_clicked(Hex)
 signal hex_hovered(Hex)
+signal hex_hovered_exited(Hex)
 
 func init(_q, _r):
   q = _q
@@ -40,6 +41,7 @@ func _on_mouse_entered():
   emit_signal("hex_hovered", self)
 
 func _on_mouse_exited():
+  emit_signal("hex_hover_exited", self)
   hovered = false
 
 func _on_input_event(viewport, event, shape_idx):
@@ -47,6 +49,8 @@ func _on_input_event(viewport, event, shape_idx):
     if event.button_index == BUTTON_LEFT and event.pressed:
       emit_signal("hex_clicked", self)
 
+func get_units():
+  return $Units.get_children()
 
 func to_coordinate():
   return Coordinate.new(q, r)

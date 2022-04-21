@@ -2,9 +2,6 @@ extends YSort
 
 class_name Map
 
-#signal try_to_place_unit(coordinate)
-#signal try_to_move_unit(unit, hex)
-#signal try_to_move_and_attack(by, against)
 signal hex_clicked(hex)
 signal hex_hovered(hex)
 
@@ -13,9 +10,6 @@ const UNIT = preload("Unit.tscn")
 
 export(MapTools.MapShape) var map_shape
 export(int) var map_radius = 7
-
-# coordinate key -> unit
-#var unit_map: Dictionary = {}
 
 var hexes: Dictionary = {}
 
@@ -30,6 +24,7 @@ func _ready():
     var hex = HEX.instance().init(coordinate.q, coordinate.r)
     hex.connect("hex_clicked", self, "_on_hex_clicked")
     hex.connect("hex_hovered", self, "_on_hex_hovered")
+    hex.connect("hex_hover_exited", self, "_on_hex_hovered_exited")
     add_child(hex)
     hexes[coordinate.to_int()] = hex
     astar.add_point(coordinate.to_int(), MapTools.pointy_hex_to_pixel(coordinate))
@@ -50,22 +45,28 @@ func _process(dt):
       var coordinate = Coordinate.new().from_int(id)
       var hex = hexes[id]
       hex.path_hilight = true
-      
+
+func _on_unit_moved(from, to):
+  astar.set_point_disabled(from.to_int(), false)
+  astar.set_point_disabled(to.to_int(), true)
 
 func _on_hex_clicked(hex: Hex):
   emit_signal("hex_clicked", hex)
   
+func _on_hex_hovered_exited(hex: Hex):
+  pass
+  
 func _on_hex_hovered(hex: Hex):
   emit_signal("hex_hovered", hex)
 
-func hilight_path(from, to, max_length):
-  print("Doing the hilight?")
-  hilighted_path = astar.get_id_path(from.to_int(), to.to_int())
-  hilighted_path.resize(min(hilighted_path.size(), max_length))
-  return hilighted_path
+func set_hilighted_path(_path):
+  hilighted_path = _path
 
-func get_astar_path(from: Coordinate, to: Coordinate):
-  return astar.get_id_path(from.to_int(), to.to_int())
+func get_astar_path(from: Coordinate, to: Coordinate, max_length):
+  var path = astar.get_id_path(from.to_int(), to.to_int())
+  if max_length:
+    path.resize(min(path.size(), max_length))  
+  return path
   
 func animate_unit_move(args):
   print("command_move_unit")
