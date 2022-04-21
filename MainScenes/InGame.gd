@@ -64,21 +64,23 @@ func execute_command(command_func: FuncRef, args):
 func execute_commands(commands: Array):
   for command in commands:
     var success = yield(execute_command(command.func_ref, command.args), "completed")
-    print("Command result %s for %s" % [success, command.func_ref.name])
     if not success:
       break
   
   return true
 
 func command_place_unit(args):
-    var hex = args.hex
-    var unit = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.SKELLY)
-    unit.set_team($Teams.get_child(current_team_index))
-    unit.add_to_group("in_team")
-    place_unit(unit, hex)
-    yield(get_tree(), "idle_frame")
+  yield(get_tree(), "idle_frame")
+  
+  var hex = args.hex
+  var unit = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.SKELLY)
+  unit.set_team($Teams.get_child(current_team_index))
+  unit.add_to_group("in_team")
+  place_unit(unit, hex)
     
 func command_move_unit(args):
+  yield(get_tree(), "idle_frame")
+  
   print("in command_move unit, pathsize vs mov points: %s %s" % [args.path.size(), args.unit.movement_points])
   if args.path.size() == 0 || args.path.size() > args.unit.movement_points:
     yield(get_tree(), "idle_frame")
@@ -87,14 +89,16 @@ func command_move_unit(args):
     
   yield($Map.animate_unit_move(args), "completed")
   place_unit(args.unit, $Map.hexes[args.path[args.path.size()-1]], args.path.size())
-  yield(get_tree(), "idle_frame")
   return true
   
 func command_attack(args):
+  yield(get_tree(), "idle_frame")
+  if args.by.attack_range < MapTools.get_distance(args.by.get_coordinate(), args.against.get_coordinate()):
+    return false
   print("Attack!")
   yield($Map.animate_unit_attack(args), "completed")
-  yield(get_tree(), "idle_frame")
   args.against.take_damage(args.by.damage_amount)
+  return true
   
 func select_unit(unit):
   unit.select()
@@ -117,7 +121,7 @@ func handle_hex_click(hex):
     
   print("Had last hilighted path, picking the last hex from that")
   
-  var hex_units = hex.get_node("Units").get_children()
+  var hex_units = original_target_hex.get_node("Units").get_children()
   print("Hex units size", hex_units.size())
   if hex_units.size() > 0:
     print("There was a unit on the tile!")

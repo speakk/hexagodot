@@ -10,6 +10,7 @@ var units = {
     "damage": 1,
     "movement_points": 5,
     "attack_points": 1,
+    "attack_range": 1,
     "sprite": preload("res://assets/sprites/stabby.png")
    },
   UnitType.SKELLY: {
@@ -17,6 +18,7 @@ var units = {
     "damage": 1,
     "movement_points": 4,
     "attack_points": 1,
+    "attack_range": 1,
     "sprite": preload("res://assets/sprites/skelly.png")
    },
 }
@@ -30,3 +32,4 @@ func load_db_values(unit, type):
   unit.attack_points = data.get("attack_points")
   unit.max_movement_points = unit.movement_points
   unit.max_attack_points = unit.attack_points
+  unit.attack_range = data.get("attack_range")

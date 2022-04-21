@@ -91,3 +91,10 @@ static func get_neighbor_directions() -> Array:
 
 static func coordinate_add(coord1, coord2):
   return Coordinate.new(coord1.q + coord2.q, coord1.r + coord2.r)
+
+#// pub fn axial_distance(a: Coordinate, b: Coordinate) -> i32 {
+#//     ((a.q - b.q).abs() + (a.q + a.r - b.q - b.r).abs() + (a.r - b.r).abs()) / 2
+#// }
+
+static func get_distance(a: Coordinate, b: Coordinate):
+  return (abs(a.q - b.q) + abs(a.q + a.r - b.q - b.r) + abs(a.r - b.r)) / 2
