@@ -1,16 +1,16 @@
 extends Node2D
 
-var current_index = 0
-
 func get_current_scene():
-  var nextViewportContainer = $Containers.get_child(current_index)
+  var nextViewportContainer = $Containers.get_child(0)
   var scene = nextViewportContainer.get_child(0).get_child(0)
   return scene
 
 func switch_scenes(sceneName):
   var to_scene = load("res://MainScenes/%s.tscn" % sceneName).instance()
   
-  var next_index = 1 if current_index == 0 else 0
+  var current_index = 0
+  var next_index = 1
+  
   var nextViewportContainer = $Containers.get_child(next_index)
   var nextViewportNode = nextViewportContainer.get_node("Viewport")
   nextViewportNode.add_child(to_scene)
@@ -29,9 +29,8 @@ func switch_scenes(sceneName):
   yield($Tween, "tween_all_completed")
   
   if current_scene:
-    currentViewportContainer.visible = false    
+    currentViewportContainer.visible = false
     current_scene.queue_free()
     
-  nextViewportContainer.raise()
-    
-  current_index = next_index
+  # Move current to the bottom (despite the name "raise") so that NEXT scene will now be index 0
+  currentViewportContainer.raise()
