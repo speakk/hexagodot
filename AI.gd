@@ -32,6 +32,7 @@ func attack_closest_enemy(by: Unit):
     print("Found closest unit ", closest_unit)
     var scene = SceneManager.get_current_scene()
     var path = scene.get_shortest_path_to_occupied_tile(by.get_coordinate(), closest_unit.get_coordinate(), by)
+    #scene.get_node("Map").set_hilighted_path(path)
     yield(scene.try_to_move_and_attack(by, closest_unit, path), "completed")
     print("Emitted, right?")
   

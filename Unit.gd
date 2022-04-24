@@ -80,3 +80,6 @@ func use_movement_points(amount):
 func _set_attack_points(value):
   attack_points = value
   $ActionBar.attack_points = attack_points
+
+func use_attack_points(amount):
+  _set_attack_points(attack_points - amount)

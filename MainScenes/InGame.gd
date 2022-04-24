@@ -104,9 +104,14 @@ func command_attack(args):
   yield(get_tree(), "idle_frame")
   if args.by.attack_range < MapTools.get_distance(args.by.get_coordinate(), args.against.get_coordinate()):
     return false
+    
+  if args.by.attack_points <= 0:
+    return false
+    
   print("Attack!")
   yield($Map.animate_unit_attack(args), "completed")
   args.against.take_damage(args.by.damage_amount)
+  args.by.use_attack_points(1)
   return true
   
 func select_unit(unit):
