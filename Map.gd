@@ -104,22 +104,26 @@ func animate_unit_attack(args):
   var against = args.against
   
   var original_position = Vector2(by.global_position)
+  print("ORIG %s, %s" % [original_position.x, original_position.y])
   
   var tween = $PathTween
-  tween.interpolate_property(by,
+  tween.remove_all()
+  var result = tween.interpolate_property(by,
       "global_position",
       by.global_position,
       against.global_position,
       0.1
     )
-  tween.start()
+  result = tween.start()
   yield(tween, "tween_completed")
-  tween.interpolate_property(by,
+  tween.remove_all()
+  print("Okay animating back %s to %s" % [by.global_position, original_position])
+  result = tween.interpolate_property(by,
       "global_position",
       by.global_position,
       original_position,
       0.2,
       Tween.EASE_OUT
     )
-  tween.start()
+  result = tween.start()
   yield(tween, "tween_completed")

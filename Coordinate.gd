@@ -18,6 +18,9 @@ func set_from_key(key: String):
   r = elements[1]
   return self
 
+func _to_string():
+  return "q: %s, r: %s" % [q, r]
+
 var top = 1000
 var bottom = -1000
 

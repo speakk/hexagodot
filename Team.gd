@@ -4,6 +4,7 @@ class_name Team
 
 signal team_turn_finished(team)
 signal try_to_place_unit(hex)
+signal try_to_move_and_attack(by, against)
 
 enum ControllerType {
   PLAYER, AI
@@ -25,14 +26,28 @@ func init(_name: String, _controller: int, _color: Color, _map):
   add_child(ai)
   return self
 
-func reset_unit_points():
-  print("Resetting unit points")
+func get_team_units():
+  var team_units = []
   var units = get_tree().get_nodes_in_group("unit_in_team")
   for unit in units:
-    print("Checking if in group for team name: %s" % team_name)
     if unit.is_in_group(team_name):
-      print("Resetting points!")
-      unit.reset_points()
+      team_units.push_back(unit)
+  
+  return team_units
+
+func get_enemy_units():
+  var enemy_units = []
+  var units = get_tree().get_nodes_in_group("unit_in_team")
+  for unit in units:
+    if not unit.is_in_group(team_name):
+      enemy_units.push_back(unit)
+      
+  return enemy_units
+        
+func reset_unit_points():
+  var units = get_team_units()
+  for unit in units:
+    unit.reset_points()
 
 func start_turn():
   reset_unit_points()

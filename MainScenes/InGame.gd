@@ -5,6 +5,7 @@ var selected_unit
 var last_hilighted_path
 
 const UNIT = preload("res://Unit.tscn")
+const AI_UNIT = preload("res://AIUnit.tscn")
 const TEAM = preload("res://Team.tscn")
 
 signal team_added(team)
@@ -16,6 +17,7 @@ func add_team(name, controller, color):
   $Teams.add_child(team)
   team.connect("team_turn_finished", self, "end_turn")
   team.connect("try_to_place_unit", self, "try_to_place_unit")
+  team.connect("try_to_move_and_attack", self, "try_to_move_and_attack")
   emit_signal("team_added", team)
 
 func start_turn(team):
@@ -57,11 +59,13 @@ func _process(_delta):
     _on_InGameUI_player_end_turn_pressed()
 
 func execute_command(command_func: FuncRef, args):
+    yield(get_tree(), "idle_frame")
     #$CommandSequencer.execute_command(command_func, args)
     var result = yield(command_func.call_func(args), "completed")
     return result
 
 func execute_commands(commands: Array):
+  yield(get_tree(), "idle_frame")
   for command in commands:
     var success = yield(execute_command(command.func_ref, command.args), "completed")
     if not success:
@@ -73,8 +77,13 @@ func command_place_unit(args):
   yield(get_tree(), "idle_frame")
   
   var hex = args.hex
-  var unit = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.SKELLY)
-  unit.set_team($Teams.get_child(current_team_index))
+  var current_team = get_current_team()
+  var unit
+  if current_team.controller == Team.ControllerType.AI:
+    unit = AI_UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.SKELLY)
+  else:
+    unit = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.SKELLY)
+  unit.set_team(current_team)
   unit.add_to_group("in_team")
   place_unit(unit, hex)
     
@@ -152,18 +161,23 @@ func handle_hex_click(hex):
   
 
 func try_to_place_unit(hex):
-  execute_command(funcref(self, "command_place_unit"), { "hex": hex })
+  yield(execute_command(funcref(self, "command_place_unit"), { "hex": hex }), "completed")
 
 func try_to_move_unit(unit, path):
-  execute_command(funcref(self, "command_move_unit"), { "unit": unit, "path": path })
+  yield(execute_command(funcref(self, "command_move_unit"), { "unit": unit, "path": path }), "completed")
 
 func try_to_move_and_attack(by, against, path):
-  # Target hex is one before last (last is enemy location
-  # TODO: Make unit stop where their range is maybe
-  #path.resize(path.size()-1)
-  #var target_hex = $Map.hexes[path[path.size()-1]]
+  yield(get_tree(), "idle_frame")  
+  print("try_to_move_and_attack")
+  if not path:
+    print("Didn't have path so let's check coordinates: %s %s" % [by.get_coordinate(), against.get_coordinate()])
+    path = $Map.get_astar_path(by.get_coordinate(), against.get_coordinate(), by.movement_points)
+  
+  if not path:
+    return false
+  
   var target_hex = $Map.hexes[path[path.size()-1]]
-  execute_commands([
+  yield(execute_commands([
     {
       "func_ref": funcref(self, "command_move_unit"),
       "args": { "hex": target_hex, "unit": by, "path": path }
@@ -172,7 +186,7 @@ func try_to_move_and_attack(by, against, path):
       "func_ref": funcref(self, "command_attack"),
       "args": { "by": by, "against": against }
      }
-   ])
+   ]), "completed")
 
 
 func clear_last_selected():
@@ -210,6 +224,21 @@ func _on_InGameUI_player_end_turn_pressed():
 func _on_Map_hex_clicked(hex):
   handle_hex_click(hex)
 
+func get_shortest_path_to_occupied_tile(from, to, unit):
+  var potential_paths = []
+  var neighbor_directions = MapTools.get_neighbor_directions()
+  for neighbor_direction in neighbor_directions:
+    var neighbor_coordinate = MapTools.coordinate_add(to, neighbor_direction)
+    if $Map.astar.has_point(neighbor_coordinate.to_int()):
+      potential_paths.push_back($Map.get_astar_path(from, neighbor_coordinate, unit.movement_points))
+  
+  var shortest_path
+  for potential_path in potential_paths:
+    if not shortest_path or potential_path.size() < shortest_path.size():
+      shortest_path = potential_path
+      
+  return shortest_path
+
 func _on_Map_hex_hovered(hex):
   if selected_unit:
     var coordinate = hex.to_coordinate()
@@ -220,18 +249,6 @@ func _on_Map_hex_hovered(hex):
       last_hilighted_path = $Map.get_astar_path(from_coord, coordinate, selected_unit.movement_points)
       $Map.set_hilighted_path(last_hilighted_path)
     else:
-      var potential_paths = []
-      var neighbor_directions = MapTools.get_neighbor_directions()
-      for neighbor_direction in neighbor_directions:
-        var neighbor_coordinate = MapTools.coordinate_add(coordinate, neighbor_direction)
-        if $Map.astar.has_point(neighbor_coordinate.to_int()):
-          potential_paths.push_back($Map.get_astar_path(from_coord, neighbor_coordinate, selected_unit.movement_points))
-      
-      var shortest_path
-      for potential_path in potential_paths:
-        if not shortest_path or potential_path.size() < shortest_path.size():
-          shortest_path = potential_path
-      
-      print("Alright found the shortest path")
+      var shortest_path = get_shortest_path_to_occupied_tile(from_coord, coordinate, selected_unit)
       last_hilighted_path = shortest_path
       $Map.set_hilighted_path(last_hilighted_path)
