@@ -64,6 +64,7 @@ func take_damage(amount):
   _set_health(health - amount)
   if health <= 0:
     alive = false
+    emit_signal("unit_died", self)
     self.queue_free()
   
 func _set_health(value):

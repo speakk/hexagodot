@@ -18,6 +18,10 @@ func add_team(name, controller, color):
   team.connect("team_turn_finished", self, "end_turn")
   team.connect("try_to_place_unit", self, "try_to_place_unit")
   team.connect("try_to_move_and_attack", self, "try_to_move_and_attack")
+  
+  if controller == Team.ControllerType.PLAYER:
+    team.connect("unit_died", self, "handle_hero_death")
+  
   emit_signal("team_added", team)
 
 func start_turn(team):
@@ -35,6 +39,7 @@ func create_hero():
       var hex = $Map.hexes.values()[randi() % $Map.hexes.size()]
       var hero = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.HERO)
       hero.set_team(team)
+      hero.connect("unit_died", self, "on_hero_death")
       place_unit(hero, hex)
   
 func prep_ui():
@@ -257,3 +262,6 @@ func _on_Map_hex_hovered(hex):
       var shortest_path = get_shortest_path_to_occupied_tile(from_coord, coordinate, selected_unit)
       last_hilighted_path = shortest_path
       $Map.set_hilighted_path(last_hilighted_path)
+
+func on_hero_death(team):
+  SceneManager.switch_scenes("GameOver")

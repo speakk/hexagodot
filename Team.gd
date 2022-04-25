@@ -5,6 +5,7 @@ class_name Team
 signal team_turn_finished(team)
 signal try_to_place_unit(hex)
 signal try_to_move_and_attack(by, against)
+signal hero_died(team)
 
 enum ControllerType {
   PLAYER, AI
