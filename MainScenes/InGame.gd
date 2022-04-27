@@ -96,13 +96,16 @@ func command_move_unit(args):
   yield(get_tree(), "idle_frame")
   
   print("in command_move unit, pathsize vs mov points: %s %s" % [args.path.size(), args.unit.movement_points])
-  if args.path.size() == 0 || args.path.size() > args.unit.movement_points:
+  if args.path.size() <= 1:
+    return true
+  
+  if args.path.size()-1 > args.unit.movement_points:
     yield(get_tree(), "idle_frame")
     print("UH, path size was over yea")
     return false
     
   yield($Map.animate_unit_move(args), "completed")
-  place_unit(args.unit, $Map.hexes[args.path[args.path.size()-1]], args.path.size())
+  place_unit(args.unit, $Map.hexes[args.path[args.path.size()-1]], args.path.size() - 1)
   return true
   
 func command_attack(args):
