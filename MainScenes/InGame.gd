@@ -247,9 +247,9 @@ func get_shortest_path_to_occupied_tile(from, to, unit):
   
   var shortest_path
   for potential_path in potential_paths:
-    if not shortest_path or potential_path.size() < shortest_path.size():
+    if not shortest_path or potential_path and potential_path.size() < shortest_path.size():
       shortest_path = potential_path
-      
+  
   return shortest_path
 
 func _on_Map_hex_hovered(hex):

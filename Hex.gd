@@ -35,7 +35,7 @@ func _process(dt):
   
   if not path_hilight and not hovered:
     $Hexagon.modulate = $Hexagon.modulate.linear_interpolate(BASE_COLOR, 0.15)
-
+    
 func _on_mouse_entered():
   hovered = true
   emit_signal("hex_hovered", self)

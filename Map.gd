@@ -69,7 +69,9 @@ func get_astar_path(from: Coordinate, to: Coordinate, max_length):
   if max_length:
     # max_length+1 because unit location gets included in path
     path.resize(min(path.size(), max_length+1))
-  return path
+  
+  if path.size() > 0:
+    return path
   
 func animate_unit_move(args):
   print("animate_unit_move")

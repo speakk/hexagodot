@@ -6,7 +6,7 @@ enum UnitType {
 
 var units = {
   UnitType.HERO: {
-    "health": 3,
+    "health": 6,
     "damage": 1,
     "movement_points": 5,
     "attack_points": 1,
