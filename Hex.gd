@@ -54,3 +54,9 @@ func get_units():
 
 func to_coordinate():
   return Coordinate.new(q, r)
+
+func set_point_available_indicator(value):
+  if value:
+    $PointAvailableIndicator.modulate = Color(1,1,1)
+  else:
+    $PointAvailableIndicator.modulate = Color(1,0,0)

@@ -35,6 +35,10 @@ __meta__ = {
 "_editor_description_": ""
 }
 
+[node name="PointAvailableIndicator" type="Polygon2D" parent="."]
+visible = false
+polygon = PoolVector2Array( -3, 7, 4, 7, 0, 11 )
+
 [connection signal="input_event" from="Area2D" to="." method="_on_input_event"]
 [connection signal="mouse_entered" from="Area2D" to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="Area2D" to="." method="_on_mouse_exited"]

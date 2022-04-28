@@ -17,7 +17,6 @@ var astar = AStar2D.new()
 
 var hilighted_path
 
-
 func _ready():
   var coordinates = MapTools.create_grid(map_radius, map_shape)
   for coordinate in coordinates:
@@ -45,6 +44,20 @@ func _process(dt):
       var coordinate = Coordinate.new().from_int(id)
       var hex = hexes[id]
       hex.path_hilight = true
+  
+  var points = astar.get_points()
+  for point in points:
+    var hex = hexes[point]
+    if not astar.is_point_disabled(point):
+      hex.set_point_available_indicator(true)
+    else:
+      hex.set_point_available_indicator(false)
+
+func _on_unit_created(point):
+  astar.set_point_disabled(point.to_int(), true)
+
+func _on_unit_removed(point):
+  astar.set_point_disabled(point.to_int(), false)
 
 func _on_unit_moved(from, to):
   astar.set_point_disabled(from.to_int(), false)

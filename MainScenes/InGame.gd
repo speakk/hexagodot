@@ -11,6 +11,8 @@ const TEAM = preload("res://Team.tscn")
 signal team_added(team)
 signal turn_started(teams, team)
 signal unit_moved(from, to)
+signal unit_created(hex)
+signal unit_removed(hex)
 
 func add_team(name, controller, color):
   var team = TEAM.instance().init(name, controller, color, $Map)
@@ -33,11 +35,18 @@ func prep_teams():
   add_team("Player 1", Team.ControllerType.PLAYER, Color(0, 1, 0))
   add_team("AI 1", Team.ControllerType.AI, Color(0, 0, 1))
 
+func connect_unit(unit):
+  unit.connect("unit_died", self, "handle_unit_death")
+
+func handle_unit_death(unit):
+  emit_signal("unit_removed", unit.get_coordinate())
+
 func create_hero():
   for team in $Teams.get_children():
     if team.controller == Team.ControllerType.PLAYER:
       var hex = $Map.hexes.values()[randi() % $Map.hexes.size()]
       var hero = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.HERO)
+      connect_unit(hero)
       hero.set_team(team)
       hero.connect("unit_died", self, "on_hero_death")
       place_unit(hero, hex)
@@ -54,6 +63,8 @@ func _ready():
   $Map.connect("hex_clicked", self, "_on_Map_hex_clicked")
   $Map.connect("hex_hovered", self, "_on_Map_hex_hovered")
   self.connect("unit_moved", $Map, "_on_unit_moved")
+  self.connect("unit_removed", $Map, "_on_unit_removed")
+  self.connect("unit_created", $Map, "_on_unit_created")
   
   current_team_index = 0
   var current_team = get_current_team()
@@ -90,6 +101,7 @@ func command_place_unit(args):
     unit = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.SKELLY)
   unit.set_team(current_team)
   unit.add_to_group("in_team")
+  connect_unit(unit)
   place_unit(unit, hex)
     
 func command_move_unit(args):
@@ -210,6 +222,8 @@ func clear_last_selected():
   $Map.hilighted_path = null
   last_hilighted_path = null
 
+
+
 func place_unit(unit, hex, movement_points = 0):
   var original_from = Coordinate.new(unit.q, unit.r)
   if unit.get_parent():
@@ -219,7 +233,11 @@ func place_unit(unit, hex, movement_points = 0):
   unit.z_index = 1
   unit.place(hex.q, hex.r, movement_points)
   clear_last_selected()
-  emit_signal("unit_moved", original_from, hex.to_coordinate())
+  if original_from.q == hex.q and original_from.r == hex.r:
+    call_deferred("emit_signal", "unit_created", hex.to_coordinate())
+  else:
+    call_deferred("emit_signal", "unit_moved", original_from, hex.to_coordinate())
+  #emit_signal("unit_moved", original_from, hex.to_coordinate())
 
 func end_turn():
   print("Ending turn for team %s" % get_current_team().team_name)
