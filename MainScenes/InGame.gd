@@ -271,6 +271,8 @@ func get_shortest_path_to_occupied_tile(from, to, unit):
   return shortest_path
 
 func _on_Map_hex_hovered(hex):
+  last_hilighted_path = null
+  $Map.set_hilighted_path(null)
   if selected_unit:
     var coordinate = hex.to_coordinate()
     var from_coord = selected_unit.get_coordinate()
@@ -279,7 +281,8 @@ func _on_Map_hex_hovered(hex):
     if existing_units.size() == 0:
       last_hilighted_path = $Map.get_astar_path(from_coord, coordinate, selected_unit.movement_points)
       $Map.set_hilighted_path(last_hilighted_path)
-    else:
+    elif existing_units[0].team != get_current_team():
+      print("YESSIR?")
       var shortest_path = get_shortest_path_to_occupied_tile(from_coord, coordinate, selected_unit)
       last_hilighted_path = shortest_path
       $Map.set_hilighted_path(last_hilighted_path)
