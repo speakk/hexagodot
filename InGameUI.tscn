@@ -1,7 +1,11 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://themes/in_game_theme.tres" type="Theme" id=1]
 [ext_resource path="res://InGameUI.gd" type="Script" id=2]
+[ext_resource path="res://assets/fonts/ThaleahFat.ttf" type="DynamicFontData" id=3]
+
+[sub_resource type="DynamicFont" id=1]
+font_data = ExtResource( 3 )
 
 [node name="InGameUI" type="Control"]
 anchor_right = 1.0
@@ -29,5 +33,16 @@ margin_top = 32.0
 margin_right = 152.0
 margin_bottom = 72.0
 custom_constants/separation = 0
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="WaveIndicator" type="Label" parent="."]
+margin_left = 224.0
+margin_top = 192.0
+margin_right = 266.0
+margin_bottom = 207.0
+rect_scale = Vector2( 6.18033, 6.18033 )
+custom_fonts/font = SubResource( 1 )
+text = "WAVE 1"
 
 [connection signal="pressed" from="EndTurnButton" to="." method="_on_EndTurnButton_pressed"]

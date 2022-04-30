@@ -10,7 +10,7 @@ var hovered = false
 
 signal hex_clicked(Hex)
 signal hex_hovered(Hex)
-signal hex_hovered_exited(Hex)
+signal hex_hover_exited(Hex)
 
 func init(_q, _r):
   q = _q

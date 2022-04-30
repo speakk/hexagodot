@@ -3,6 +3,10 @@ extends Node2D
 var current_team_index
 var selected_unit
 var last_hilighted_path
+var round_counter = 0
+var wave_counter = 0
+
+export var wave_length: int = 3
 
 const UNIT = preload("res://Unit.tscn")
 const AI_UNIT = preload("res://AIUnit.tscn")
@@ -10,6 +14,8 @@ const TEAM = preload("res://Team.tscn")
 
 signal team_added(team)
 signal turn_started(teams, team)
+signal round_started(round_number)
+signal wave_started(wave_number)
 signal unit_moved(from, to)
 signal unit_created(hex)
 signal unit_removed(hex)
@@ -29,6 +35,9 @@ func add_team(name, controller, color):
 func start_turn(team):
   print("Starting turn! %s" % team.team_name)
   team.start_turn()
+  if team.get_index() == 0:
+    round_counter += 1
+    emit_signal("round_started", round_counter)  
   emit_signal("turn_started", $Teams, team)
 
 func prep_teams():
@@ -65,6 +74,9 @@ func _ready():
   self.connect("unit_moved", $Map, "_on_unit_moved")
   self.connect("unit_removed", $Map, "_on_unit_removed")
   self.connect("unit_created", $Map, "_on_unit_created")
+  #self.connect("r", $Map, "_on_unit_created")
+  self.connect("round_started", self, "_on_round_started")
+  self.connect("wave_started", $InGameUI, "_on_wave_started")
   
   current_team_index = 0
   var current_team = get_current_team()
@@ -289,3 +301,9 @@ func _on_Map_hex_hovered(hex):
 
 func on_hero_death(team):
   SceneManager.switch_scenes("GameOver")
+
+func _on_round_started(round_number: int):
+  print("Round has started %s" % round_number)
+  if (round_number - 1) % wave_length == 0:
+    wave_counter += 1
+    emit_signal("wave_started", wave_counter)
