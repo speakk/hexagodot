@@ -21,16 +21,20 @@ export var attack_range: int = 1
 
 var unit_type
 
-func init(_q, _r, type):
-  q = _q
-  r = _r
+func init(type):
   unit_type = type
-  UnitDB.load_db_values(self, type)
-  $HealthBar.max_value = max_health
-  $HealthBar.value = health
-  $ActionBar.attack_points = attack_points
-  $ActionBar.movement_points = movement_points
   return self
+
+#func init(_q, _r, type):
+#  q = _q
+#  r = _r
+#  unit_type = type
+#  UnitDB.load_db_values(self, type)
+#  $HealthBar.max_value = max_health
+#  $HealthBar.value = health
+#  $ActionBar.attack_points = attack_points
+#  $ActionBar.movement_points = movement_points
+#  return self
   
 func place(_q, _r, movement_points = 0):
   q = _q

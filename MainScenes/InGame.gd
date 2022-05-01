@@ -9,7 +9,6 @@ var wave_counter = 0
 export var wave_length: int = 3
 
 const UNIT = preload("res://Units/Unit.tscn")
-const AI_UNIT = preload("res://Units/AIUnit.tscn")
 const TEAM = preload("res://Team.tscn")
 
 signal team_added(team)
@@ -54,7 +53,9 @@ func create_hero():
   for team in $Teams.get_children():
     if team.controller == Team.ControllerType.PLAYER:
       var hex = $Map.hexes.values()[randi() % $Map.hexes.size()]
-      var hero = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.HERO)
+      #var hero = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.HERO)
+      #var hero = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.HERO)
+      var hero = UnitDB.create_unit(UnitDB.UnitType.HERO)
       connect_unit(hero)
       hero.set_team(team)
       hero.connect("unit_died", self, "on_hero_death")
@@ -101,20 +102,29 @@ func execute_commands(commands: Array):
   
   return true
 
+# TODO:
+# This method used to allow for players placing units
+# Refactor later to get rid of "if" here and do it at the place of hex click handling
 func command_place_unit(args):
   yield(get_tree(), "idle_frame")
-  
-  var hex = args.hex
   var current_team = get_current_team()
-  var unit
+  
   if current_team.controller == Team.ControllerType.AI:
-    unit = AI_UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.EGG)
+    var hex = args.hex
+    var unit = UnitDB.create_unit(UnitDB.UnitType.EGG)
+#    if current_team.controller == Team.ControllerType.AI:
+#      #unit = AI_UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.EGG)
+#      #unit = AI_UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.EGG)
+#      unit = UnitDB.create_unit(UnitDB.UnitType.EGG)
+#    else:
+#      pass
+      #unit = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.SKELLY)
+    unit.set_team(current_team)
+    unit.add_to_group("in_team")
+    connect_unit(unit)
+    place_unit(unit, hex)
   else:
-    unit = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.SKELLY)
-  unit.set_team(current_team)
-  unit.add_to_group("in_team")
-  connect_unit(unit)
-  place_unit(unit, hex)
+    return false
     
 func command_move_unit(args):
   yield(get_tree(), "idle_frame")
