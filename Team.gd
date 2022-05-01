@@ -58,6 +58,11 @@ func start_turn():
   else:
     print("AI TURN HAS STARTED")
     ai.perform_turn()
+  
+  var units = get_team_units()
+  for unit in units:
+    if unit.has_method("process_turn"):
+      yield(unit.process_turn(), "completed")
 
 enum Commands {
   END_TURN,

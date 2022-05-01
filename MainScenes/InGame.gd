@@ -79,6 +79,8 @@ func _ready():
   self.connect("round_started", self, "_on_round_started")
   self.connect("wave_started", $InGameUI, "_on_wave_started")
   
+  Events.connect("spawner_finished", self, "_on_spawner_finished")
+  
   current_team_index = 0
   var current_team = get_current_team()
   start_turn(current_team)
@@ -317,3 +319,10 @@ func _on_round_started(round_number: int):
   if (round_number - 1) % wave_length == 0:
     wave_counter += 1
     emit_signal("wave_started", wave_counter)
+
+func _on_spawner_finished(spawner_unit):
+  var hex = $Map.hexes[spawner_unit.get_coordinate().to_int()]
+  var unit = UnitDB.create_unit(UnitDB.UnitType.SKELLY)
+  connect_unit(unit)
+  unit.set_team(get_current_team())
+  place_unit(unit, hex)

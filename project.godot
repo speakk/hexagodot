@@ -76,6 +76,7 @@ config/icon="res://icon.png"
 
 SceneManager="*res://SceneManager.tscn"
 UnitDB="*res://Units/UnitDB.gd"
+Events="*res://Events.gd"
 
 [debug]
 
