@@ -8,8 +8,8 @@ var wave_counter = 0
 
 export var wave_length: int = 3
 
-const UNIT = preload("res://Unit.tscn")
-const AI_UNIT = preload("res://AIUnit.tscn")
+const UNIT = preload("res://Units/Unit.tscn")
+const AI_UNIT = preload("res://Units/AIUnit.tscn")
 const TEAM = preload("res://Team.tscn")
 
 signal team_added(team)
@@ -108,7 +108,7 @@ func command_place_unit(args):
   var current_team = get_current_team()
   var unit
   if current_team.controller == Team.ControllerType.AI:
-    unit = AI_UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.SKELLY)
+    unit = AI_UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.EGG)
   else:
     unit = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.SKELLY)
   unit.set_team(current_team)

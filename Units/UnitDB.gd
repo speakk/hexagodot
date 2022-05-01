@@ -1,7 +1,7 @@
 extends Node
 
 enum UnitType {
-  HERO, SKELLY
+  HERO, SKELLY, EGG
 }
 
 var units = {
@@ -21,6 +21,14 @@ var units = {
     "attack_range": 1,
     "sprite": preload("res://assets/sprites/skelly.png")
    },
+    UnitType.EGG: {
+    "health": 1,
+    "damage": 0,
+    "movement_points": 0,
+    "attack_points": 0,
+    "attack_range": 0,
+    "sprite": preload("res://assets/sprites/egg.png")
+   }
 }
 
 func load_db_values(unit, type):

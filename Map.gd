@@ -6,7 +6,7 @@ signal hex_clicked(hex)
 signal hex_hovered(hex)
 
 const HEX = preload("Hex.tscn")
-const UNIT = preload("Unit.tscn")
+const UNIT = preload("Units/Unit.tscn")
 
 export(MapTools.MapShape) var map_shape
 export(int) var map_radius = 7
