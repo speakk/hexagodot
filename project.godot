@@ -10,11 +10,6 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Node",
-"class": "AI",
-"language": "GDScript",
-"path": "res://AI.gd"
-}, {
-"base": "Node",
 "class": "Command",
 "language": "GDScript",
 "path": "res://Commands/Command.gd"
@@ -55,7 +50,6 @@ _global_script_classes=[ {
 "path": "res://Units/Unit.gd"
 } ]
 _global_script_class_icons={
-"AI": "",
 "Command": "",
 "Controller": "",
 "Coordinate": "",
@@ -77,6 +71,7 @@ config/icon="res://icon.png"
 SceneManager="*res://SceneManager.tscn"
 UnitDB="*res://Units/UnitDB.gd"
 Events="*res://Events.gd"
+AI="*res://AI.gd"
 
 [debug]
 

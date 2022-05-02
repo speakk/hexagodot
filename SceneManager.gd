@@ -34,3 +34,5 @@ func switch_scenes(sceneName):
     
   # Move current to the bottom (despite the name "raise") so that NEXT scene will now be index 0
   currentViewportContainer.raise()
+  if to_scene.has_method("enter_scene"):
+    to_scene.enter_scene()

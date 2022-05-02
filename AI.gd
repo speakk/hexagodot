@@ -1,15 +1,6 @@
 extends Node
 
-class_name AI
-
-var team
-var map: Map
-
-func _init(_team, _map):
-  team = _team
-  map = _map
-
-func find_closest(unit: Unit, others: Array):
+func find_closest(unit, others: Array):
   if others.size() == 0:
     return null
     
@@ -23,9 +14,10 @@ func find_closest(unit: Unit, others: Array):
   
   return closest_unit
 
-func attack_closest_enemy(by: Unit):
+func attack_closest_enemy(by):
   yield(get_tree(), "idle_frame")  
   print("Attacking closest enemy")
+  var team = by.team
   var enemy_units = team.get_enemy_units()
   var closest_unit = find_closest(by, enemy_units)
   if closest_unit:
@@ -36,18 +28,29 @@ func attack_closest_enemy(by: Unit):
     yield(scene.try_to_move_and_attack(by, closest_unit, path), "completed")
     print("Emitted, right?")
   
-func do_unit_actions():
+func do_unit_actions(team):
   print("do_unit_actions")
   for unit in team.get_team_units():
     print("Found unit in team units")
     yield(attack_closest_enemy(unit), "completed")
 
-func perform_turn():
+func spawn_random_egg(team):
+  print("Spawning eggsy")
   var scene = SceneManager.get_current_scene()
-  print("Perform ai turn")
+  var map = scene.get_map()
   var hexes = map.hexes.values()
   var rand_hex = hexes[randi() % hexes.size()]
-  team.emit_signal("try_to_place_unit", rand_hex)
+  team.emit_signal("try_to_place_unit", rand_hex, team)
   yield(scene.get_tree().create_timer(1.0), "timeout")
-  do_unit_actions()
-  team.emit_signal("team_turn_finished")
+
+
+#func perform_turn():
+#  var scene = SceneManager.get_current_scene()
+#  var map = scene.get_map()
+#  print("Perform ai turn")
+#  var hexes = map.hexes.values()
+#  var rand_hex = hexes[randi() % hexes.size()]
+#  team.emit_signal("try_to_place_unit", rand_hex)
+#  yield(scene.get_tree().create_timer(1.0), "timeout")
+#  do_unit_actions()
+#  team.emit_signal("team_turn_finished")

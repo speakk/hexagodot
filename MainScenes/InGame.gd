@@ -65,7 +65,7 @@ func prep_ui():
   self.connect("team_added", $InGameUI, "on_team_added")
   self.connect("turn_started", $InGameUI, "on_turn_started")
 
-func _ready():
+func enter_scene():
   randomize()
   prep_ui()
   prep_teams()
@@ -109,9 +109,10 @@ func execute_commands(commands: Array):
 # Refactor later to get rid of "if" here and do it at the place of hex click handling
 func command_place_unit(args):
   yield(get_tree(), "idle_frame")
-  var current_team = get_current_team()
+  #var current_team = get_current_team()
+  var team = args.team
   
-  if current_team.controller == Team.ControllerType.AI:
+  if team.controller == Team.ControllerType.AI:
     var hex = args.hex
     var unit = UnitDB.create_unit(UnitDB.UnitType.EGG)
 #    if current_team.controller == Team.ControllerType.AI:
@@ -121,7 +122,7 @@ func command_place_unit(args):
 #    else:
 #      pass
       #unit = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.SKELLY)
-    unit.set_team(current_team)
+    unit.set_team(team)
     unit.add_to_group("in_team")
     connect_unit(unit)
     place_unit(unit, hex)
@@ -206,11 +207,11 @@ func handle_hex_click(hex):
       try_to_move_unit(selected_unit, last_hilighted_path)
     elif not selected_unit:
       print("No unit selected, so place a new one")
-      try_to_place_unit(hex)
+      try_to_place_unit(hex, get_current_team())
   
 
-func try_to_place_unit(hex):
-  yield(execute_command(funcref(self, "command_place_unit"), { "hex": hex }), "completed")
+func try_to_place_unit(hex, team):
+  yield(execute_command(funcref(self, "command_place_unit"), { "hex": hex, "team": team }), "completed")
 
 func try_to_move_unit(unit, path):
   yield(execute_command(funcref(self, "command_move_unit"), { "unit": unit, "path": path }), "completed")
@@ -314,11 +315,19 @@ func _on_Map_hex_hovered(hex):
 func on_hero_death(team):
   SceneManager.switch_scenes("GameOver")
 
+func get_first_ai_team():
+  for team in $Teams.get_children():
+    if team.controller == Team.ControllerType.AI:
+      return team
+
 func _on_round_started(round_number: int):
   print("Round has started %s" % round_number)
   if (round_number - 1) % wave_length == 0:
     wave_counter += 1
     emit_signal("wave_started", wave_counter)
+    var ai_team = get_first_ai_team()
+    for i in range(wave_counter):
+      AI.spawn_random_egg(ai_team)
 
 func _on_spawner_finished(spawner_unit):
   var hex = $Map.hexes[spawner_unit.get_coordinate().to_int()]
@@ -326,3 +335,6 @@ func _on_spawner_finished(spawner_unit):
   connect_unit(unit)
   unit.set_team(get_current_team())
   place_unit(unit, hex)
+
+func get_map():
+  return get_node("Map")
