@@ -11,7 +11,10 @@ const UNIT = preload("Units/Unit.tscn")
 export(MapTools.MapShape) var map_shape
 export(int) var map_radius = 7
 
+# Coordinate ID -> hex/item/unit
 var hexes: Dictionary = {}
+var items: Dictionary = {}
+var units: Dictionary = {}
 
 var astar = AStar2D.new()
 
@@ -53,13 +56,13 @@ func _process(dt):
     else:
       hex.set_point_available_indicator(false)
 
-func _on_unit_created(point):
+func _on_solid_created(point):
   astar.set_point_disabled(point.to_int(), true)
 
-func _on_unit_removed(point):
+func _on_solid_removed(point):
   astar.set_point_disabled(point.to_int(), false)
 
-func _on_unit_moved(from, to):
+func _on_solid_moved(from, to):
   astar.set_point_disabled(from.to_int(), false)
   astar.set_point_disabled(to.to_int(), true)
 
@@ -143,3 +146,10 @@ func animate_unit_attack(args):
     )
   result = tween.start()
   yield(tween, "tween_completed")
+
+func get_random_free_hex():
+  var hexes_values = hexes.values()
+  hexes_values.shuffle()
+  for hex in hexes_values:
+    if hex.get_node("Units").get_child_count() == 0 and hex.get_node("Items").get_child_count() == 0:
+      return hex

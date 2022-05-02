@@ -16,6 +16,8 @@ texture = ExtResource( 1 )
 
 [node name="Units" type="YSort" parent="."]
 
+[node name="Items" type="YSort" parent="."]
+
 [node name="Area2D" type="Area2D" parent="."]
 position = Vector2( 0, 7 )
 

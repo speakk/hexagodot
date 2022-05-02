@@ -39,8 +39,7 @@ func spawn_random_egg(team):
   print("Spawning eggsy")
   var scene = SceneManager.get_current_scene()
   var map = scene.get_map()
-  var hexes = map.hexes.values()
-  var rand_hex = hexes[randi() % hexes.size()]
+  var rand_hex = map.get_random_free_hex()
   team.emit_signal("try_to_place_unit", rand_hex, team)
   yield(scene.get_tree().create_timer(0.4), "timeout")
 

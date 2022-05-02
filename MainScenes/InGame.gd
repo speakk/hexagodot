@@ -15,9 +15,9 @@ signal team_added(team)
 signal turn_started(teams, team)
 signal round_started(round_number)
 signal wave_started(wave_number)
-signal unit_moved(from, to)
-signal unit_created(hex)
-signal unit_removed(hex)
+signal solid_moved(from, to)
+signal solid_created(hex)
+signal solid_removed(hex)
 
 func add_team(name, controller, color):
   var team = TEAM.instance().init(name, controller, color, $Map)
@@ -47,12 +47,13 @@ func connect_unit(unit):
   unit.connect("unit_died", self, "handle_unit_death")
 
 func handle_unit_death(unit):
-  emit_signal("unit_removed", unit.get_coordinate())
+  emit_signal("solid_removed", unit.get_coordinate())
 
 func create_hero():
   for team in $Teams.get_children():
     if team.controller == Team.ControllerType.PLAYER:
-      var hex = $Map.hexes.values()[randi() % $Map.hexes.size()]
+      #var hex = $Map.hexes.values()[randi() % $Map.hexes.size()]
+      var hex = $Map.get_random_free_hex()
       #var hero = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.HERO)
       #var hero = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.HERO)
       var hero = UnitDB.create_unit(UnitDB.UnitType.HERO)
@@ -60,7 +61,23 @@ func create_hero():
       hero.set_team(team)
       hero.connect("unit_died", self, "on_hero_death")
       place_unit(hero, hex)
+
+func place_torch(q, r):
+  var TORCH = preload("res://Items/Torch.tscn")
+  var torch = TORCH.instance()
+  var hex = $Map.hexes[Coordinate.new(q, r).to_int()]
+  place_item(torch, hex)
+
+func place_torches():
+  place_torch(-7, 0)
+  place_torch(6, 0)
   
+  place_torch(0, -7)
+  place_torch(0, 6)
+  
+  place_torch(6, -7)
+  place_torch(-7, 6)
+
 func prep_ui():
   self.connect("team_added", $InGameUI, "on_team_added")
   self.connect("turn_started", $InGameUI, "on_turn_started")
@@ -72,15 +89,17 @@ func enter_scene():
   create_hero()
   $Map.connect("hex_clicked", self, "_on_Map_hex_clicked")
   $Map.connect("hex_hovered", self, "_on_Map_hex_hovered")
-  self.connect("unit_moved", $Map, "_on_unit_moved")
-  self.connect("unit_removed", $Map, "_on_unit_removed")
-  self.connect("unit_created", $Map, "_on_unit_created")
+  self.connect("solid_moved", $Map, "_on_solid_moved")
+  self.connect("solid_removed", $Map, "_on_solid_removed")
+  self.connect("solid_created", $Map, "_on_solid_created")
   #self.connect("r", $Map, "_on_unit_created")
   self.connect("round_started", self, "_on_round_started")
   self.connect("wave_started", $InGameUI, "_on_wave_started")
   self.connect("turn_started", $InGameUI, "_on_turn_started")
   
   Events.connect("spawner_finished", self, "_on_spawner_finished")
+  
+  place_torches()
   
   current_team_index = 0
   var current_team = get_current_team()
@@ -248,22 +267,28 @@ func clear_last_selected():
   $Map.hilighted_path = null
   last_hilighted_path = null
 
-
+func _place_solid(solid, hex, from):
+  solid.global_position = hex.global_position
+  solid.z_index = 1
+  if not from or (from.q == hex.q and from.r == hex.r):
+    call_deferred("emit_signal", "solid_created", hex.to_coordinate())
+  else:
+    call_deferred("emit_signal", "solid_moved", from, hex.to_coordinate())
+    
+func place_item(item, hex, movement_points = 0):
+  if item.get_parent():
+    item/get_parent().remove_child(item)
+  hex.get_node("Items").add_child(item)
+  _place_solid(item, hex, null)
 
 func place_unit(unit, hex, movement_points = 0):
-  var original_from = Coordinate.new(unit.q, unit.r)
   if unit.get_parent():
     unit.get_parent().remove_child(unit)
   hex.get_node("Units").add_child(unit)
-  unit.global_position = hex.global_position
-  unit.z_index = 1
+  var original_from = Coordinate.new(unit.q, unit.r)
   unit.place(hex.q, hex.r, movement_points)
   clear_last_selected()
-  if original_from.q == hex.q and original_from.r == hex.r:
-    call_deferred("emit_signal", "unit_created", hex.to_coordinate())
-  else:
-    call_deferred("emit_signal", "unit_moved", original_from, hex.to_coordinate())
-  #emit_signal("unit_moved", original_from, hex.to_coordinate())
+  _place_solid(unit, hex, original_from)
 
 func end_turn():
   print("Ending turn for team %s" % get_current_team().team_name)
