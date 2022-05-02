@@ -33,11 +33,11 @@ func add_team(name, controller, color):
 
 func start_turn(team):
   print("Starting turn! %s" % team.team_name)
-  team.start_turn()
   if team.get_index() == 0:
     round_counter += 1
     emit_signal("round_started", round_counter)  
   emit_signal("turn_started", $Teams, team)
+  team.start_turn()
 
 func prep_teams():
   add_team("Player 1", Team.ControllerType.PLAYER, Color(0, 1, 0))
@@ -78,6 +78,7 @@ func enter_scene():
   #self.connect("r", $Map, "_on_unit_created")
   self.connect("round_started", self, "_on_round_started")
   self.connect("wave_started", $InGameUI, "_on_wave_started")
+  self.connect("turn_started", $InGameUI, "_on_turn_started")
   
   Events.connect("spawner_finished", self, "_on_spawner_finished")
   
@@ -327,7 +328,7 @@ func _on_round_started(round_number: int):
     emit_signal("wave_started", wave_counter)
     var ai_team = get_first_ai_team()
     for i in range(wave_counter):
-      AI.spawn_random_egg(ai_team)
+      yield(AI.spawn_random_egg(ai_team), "completed")
 
 func _on_spawner_finished(spawner_unit):
   var hex = $Map.hexes[spawner_unit.get_coordinate().to_int()]
@@ -335,6 +336,6 @@ func _on_spawner_finished(spawner_unit):
   connect_unit(unit)
   unit.set_team(get_current_team())
   place_unit(unit, hex)
-
+  
 func get_map():
   return get_node("Map")

@@ -30,6 +30,8 @@ func switch_scenes(sceneName):
   
   if current_scene:
     currentViewportContainer.visible = false
+    if current_scene.has_method("clean_up_scene"):
+      current_scene.clean_up_scene()
     current_scene.queue_free()
     
   # Move current to the bottom (despite the name "raise") so that NEXT scene will now be index 0

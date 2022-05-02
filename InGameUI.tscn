@@ -45,4 +45,13 @@ rect_scale = Vector2( 6.18033, 6.18033 )
 custom_fonts/font = SubResource( 1 )
 text = "WAVE 1"
 
+[node name="TurnIndicator" type="Label" parent="."]
+margin_left = 264.0
+margin_top = 264.0
+margin_right = 335.0
+margin_bottom = 279.0
+rect_scale = Vector2( 2.54033, 2.54033 )
+custom_fonts/font = SubResource( 1 )
+text = "Your Turn!"
+
 [connection signal="pressed" from="EndTurnButton" to="." method="_on_EndTurnButton_pressed"]

@@ -35,13 +35,14 @@ func do_unit_actions(team):
     yield(attack_closest_enemy(unit), "completed")
 
 func spawn_random_egg(team):
+  yield(get_tree(), "idle_frame")  
   print("Spawning eggsy")
   var scene = SceneManager.get_current_scene()
   var map = scene.get_map()
   var hexes = map.hexes.values()
   var rand_hex = hexes[randi() % hexes.size()]
   team.emit_signal("try_to_place_unit", rand_hex, team)
-  yield(scene.get_tree().create_timer(1.0), "timeout")
+  yield(scene.get_tree().create_timer(0.4), "timeout")
 
 
 #func perform_turn():

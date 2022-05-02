@@ -2,6 +2,10 @@ extends Control
 
 signal player_end_turn_pressed()
 
+func _ready():
+  $TurnIndicator.margin_top = 320/2 + 60
+  $WaveIndicator.margin_top = 320/2
+
 func on_team_added(team):
   var label = Label.new()
   label.text = team.team_name
@@ -37,3 +41,13 @@ func _on_wave_started(wave_number):
   yield(get_tree().create_timer(1.0), "timeout")
   $Tween.interpolate_property($WaveIndicator, "margin_top", $WaveIndicator.margin_top, 800, 1, Tween.TRANS_EXPO)
   $Tween.start()
+
+func _on_turn_started(teams, team):
+  if team.controller == Team.ControllerType.PLAYER:
+    print("Turn started")
+    $Tween.remove_all()
+    $TurnIndicator.margin_top = 320/2 + 60
+    $TurnIndicator.visible = true
+    yield(get_tree().create_timer(1.3), "timeout")
+    $Tween.interpolate_property($TurnIndicator, "margin_top", $TurnIndicator.margin_top, 800, 1, Tween.TRANS_EXPO)
+    $Tween.start()

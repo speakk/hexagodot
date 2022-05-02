@@ -59,8 +59,9 @@ func start_turn():
   
   var units = get_team_units()
   for unit in units:
-    if unit.has_method("process_turn"):
-      yield(unit.process_turn(), "completed")
+    if unit.alive:
+      if unit.has_method("process_turn"):
+        yield(unit.process_turn(), "completed")
   
   if controller == ControllerType.AI:
     emit_signal("team_turn_finished")

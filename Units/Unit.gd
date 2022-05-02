@@ -96,4 +96,4 @@ func process_turn():
   yield(get_tree(), "idle_frame")
   if alive:
     if ai_controlled:
-      AI.attack_closest_enemy(self)
+      yield(AI.attack_closest_enemy(self), "completed")
