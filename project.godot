@@ -72,6 +72,7 @@ SceneManager="*res://SceneManager.tscn"
 UnitDB="*res://Units/UnitDB.gd"
 Events="*res://Events.gd"
 AI="*res://AI.gd"
+ParticleCache="*res://ParticleCache.gd"
 
 [debug]
 
