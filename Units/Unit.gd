@@ -23,6 +23,9 @@ export var ai_controlled: bool = false
 
 var unit_type
 
+func _ready():
+  $Sprite.material = $Sprite.material.duplicate()
+
 func init(type):
   unit_type = type
   return self
@@ -63,6 +66,7 @@ func set_team(_team):
 
 func take_damage(amount):
   _set_health(health - amount)
+  flash_white()
   if health <= 0:
     alive = false
     emit_signal("unit_died", self)
@@ -97,3 +101,8 @@ func process_turn():
   if alive:
     if ai_controlled:
       yield(AI.attack_closest_enemy(self), "completed")
+
+func flash_white():
+  $Tween.remove_all()
+  $Tween.interpolate_property($Sprite.material, "shader_param/whiteness", 1.0, 0.0, 0.5)
+  $Tween.start()
