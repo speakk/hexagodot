@@ -13,7 +13,7 @@ export var wave_length: int = 3
 
 signal team_added(team)
 signal turn_started(teams, team)
-signal round_started(round_number)
+signal round_started(round_number, wave_length)
 signal wave_started(wave_number)
 
 signal solid_moved(from, to)
@@ -36,7 +36,7 @@ func start_turn(team):
   print("Starting turn! %s" % team.team_name)
   if team.get_index() == 0:
     round_counter += 1
-    emit_signal("round_started", round_counter)  
+    emit_signal("round_started", round_counter, wave_length)  
   emit_signal("turn_started", $Teams, team)
   team.start_turn()
 
@@ -80,8 +80,10 @@ func place_torches():
   place_torch(-7, 6)
 
 func prep_ui():
+  self.connect("wave_started", $InGameUI, "_on_wave_started")
+  self.connect("turn_started", $InGameUI, "_on_turn_started")
+  self.connect("round_started", $InGameUI, "_on_round_started")
   self.connect("team_added", $InGameUI, "on_team_added")
-  self.connect("turn_started", $InGameUI, "on_turn_started")
 
 func enter_scene():
   randomize()
@@ -95,8 +97,7 @@ func enter_scene():
   self.connect("solid_created", $Map, "_on_solid_created")
   #self.connect("r", $Map, "_on_unit_created")
   self.connect("round_started", self, "_on_round_started")
-  self.connect("wave_started", $InGameUI, "_on_wave_started")
-  self.connect("turn_started", $InGameUI, "_on_turn_started")
+
   #self.connect("unit_selected", $InGameUI, "_on_unit_selected")
   
   Events.connect("spawner_finished", self, "_on_spawner_finished")
@@ -366,7 +367,7 @@ func get_first_ai_team():
     if team.controller == Team.ControllerType.AI:
       return team
 
-func _on_round_started(round_number: int):
+func _on_round_started(round_number: int, _wave_length):
   print("Round has started %s" % round_number)
   if (round_number - 1) % wave_length == 0:
     wave_counter += 1

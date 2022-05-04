@@ -14,6 +14,14 @@ anchor_bottom = 1.0
 theme = ExtResource( 1 )
 script = ExtResource( 2 )
 
+[node name="NextWaveLabel" type="Label" parent="."]
+margin_left = 248.0
+margin_top = 8.0
+margin_right = 366.0
+margin_bottom = 21.0
+rect_scale = Vector2( 1.72, 1.72 )
+text = "Next wave in 3 turns..."
+
 [node name="EndTurnButton" type="Button" parent="."]
 margin_left = 296.0
 margin_top = 424.0
