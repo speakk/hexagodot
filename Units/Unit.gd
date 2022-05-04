@@ -4,6 +4,8 @@ class_name Unit
 
 signal unit_died(unit)
 
+const UNIT_DEATH = preload("res://UnitDeath.tscn")
+
 var team
 
 export var q: int
@@ -72,6 +74,9 @@ func take_damage(amount):
     emit_signal("unit_died", self)
     #self.queue_free()
     self.set_alive(false)
+    var death_anim = UNIT_DEATH.instance()
+    #death_anim.global_position = global_position
+    get_parent().add_child(death_anim)
   
 func _set_health(value):
   health = value
@@ -104,5 +109,5 @@ func process_turn():
 
 func flash_white():
   $Tween.remove_all()
-  $Tween.interpolate_property($Sprite.material, "shader_param/whiteness", 1.0, 0.0, 0.5)
+  $Tween.interpolate_property($Sprite.material, "shader_param/whiteness", 1.0, 0.0, 0.4)
   $Tween.start()
