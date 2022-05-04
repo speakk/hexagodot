@@ -1,5 +1,8 @@
 extends Node2D
 
+const UNIT = preload("res://Units/Unit.tscn")
+const TEAM = preload("res://Team.tscn")
+
 var current_team_index
 var selected_unit
 var last_hilighted_path
@@ -8,13 +11,11 @@ var wave_counter = 0
 
 export var wave_length: int = 3
 
-const UNIT = preload("res://Units/Unit.tscn")
-const TEAM = preload("res://Team.tscn")
-
 signal team_added(team)
 signal turn_started(teams, team)
 signal round_started(round_number)
 signal wave_started(wave_number)
+
 signal solid_moved(from, to)
 signal solid_created(hex)
 signal solid_removed(hex)
@@ -96,6 +97,7 @@ func enter_scene():
   self.connect("round_started", self, "_on_round_started")
   self.connect("wave_started", $InGameUI, "_on_wave_started")
   self.connect("turn_started", $InGameUI, "_on_turn_started")
+  #self.connect("unit_selected", $InGameUI, "_on_unit_selected")
   
   Events.connect("spawner_finished", self, "_on_spawner_finished")
   
@@ -108,6 +110,9 @@ func enter_scene():
 func _process(_delta):
   if Input.is_action_just_pressed("player_end_turn"):
     _on_InGameUI_player_end_turn_pressed()
+    
+  if Input.is_action_just_pressed("deselect"):
+    deselect()
 
 func execute_command(command_func: FuncRef, args):
     yield(get_tree(), "idle_frame")
@@ -162,7 +167,10 @@ func command_move_unit(args):
     return false
     
   yield($Map.animate_unit_move(args), "completed")
-  place_unit(args.unit, $Map.hexes[args.path[args.path.size()-1]], args.path.size() - 1)
+  var from = args.unit.get_coordinate()
+  var to_hex = $Map.hexes[args.path[args.path.size()-1]] 
+  place_unit(args.unit, to_hex, args.path.size() - 1)
+  Events.emit_signal("unit_moved", args.unit, from, to_hex.to_coordinate())
   return true
   
 func command_attack(args):
@@ -177,11 +185,25 @@ func command_attack(args):
   yield($Map.animate_unit_attack(args), "completed")
   args.against.take_damage(args.by.damage_amount)
   args.by.use_attack_points(1)
+  Events.emit_signal("unit_attacked", args.by, args.against, args.by.damage_amount)
   return true
   
+  
+func deselect():
+  for key in $Map.hexes:
+    var hex = $Map.hexes[key]
+    for unit in hex.get_node("Units").get_children():
+      unit.deselect()
+  
+  selected_unit = null
+  last_hilighted_path = null
+  $Map.set_hilighted_path(null)
+  Events.emit_signal("deselected")
+
 func select_unit(unit):
   unit.select()
   selected_unit = unit
+  Events.emit_signal("unit_selected", unit)
   
 func get_current_team():
   return $Teams.get_child(current_team_index)
@@ -209,11 +231,7 @@ func handle_hex_click(hex):
     # No unit selected, or current team is same as unit in tile
     if (not selected_unit) and get_current_team() == existing_unit.team:
       print("No unit selected, or current team is same as unit in tile")
-      for key in $Map.hexes:
-        var other_hex = $Map.hexes[key]
-        for unit in other_hex.get_node("Units").get_children():
-          unit.deselect()
-        
+      deselect()
       print("So, selecting unit on tile")
       select_unit(existing_unit)
     elif selected_unit and get_current_team() != existing_unit.team and last_hilighted_path:
@@ -226,6 +244,7 @@ func handle_hex_click(hex):
       print("We already have a unit selected, so try to move that one")
       try_to_move_unit(selected_unit, last_hilighted_path)
     elif not selected_unit:
+      # TODO: Outdated stuff, player doesn't place units anymore
       print("No unit selected, so place a new one")
       try_to_place_unit(hex, get_current_team())
   
@@ -288,6 +307,7 @@ func place_unit(unit, hex, movement_points = 0):
   var original_from = Coordinate.new(unit.q, unit.r)
   unit.place(hex.q, hex.r, movement_points)
   clear_last_selected()
+  
   _place_solid(unit, hex, original_from)
 
 func end_turn():

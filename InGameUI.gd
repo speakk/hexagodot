@@ -51,3 +51,6 @@ func _on_turn_started(teams, team):
     yield(get_tree().create_timer(1.3), "timeout")
     $Tween.interpolate_property($TurnIndicator, "margin_top", $TurnIndicator.margin_top, 800, 1, Tween.TRANS_EXPO)
     $Tween.start()
+  
+func _on_unit_selected(unit):
+  pass

@@ -69,6 +69,7 @@ func set_team(_team):
 func take_damage(amount):
   _set_health(health - amount)
   flash_white()
+  Events.emit_signal("unit_took_damage", self, amount)
   if health <= 0:
     alive = false
     emit_signal("unit_died", self)
