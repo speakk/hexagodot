@@ -6,6 +6,7 @@ enum UnitType {
 
 var units = {
   UnitType.HERO: {
+    "name": "Hero (it's you!)",
     "health": 6,
     "damage": 1,
     "movement_points": 5,
@@ -14,6 +15,7 @@ var units = {
     "sprite": preload("res://assets/sprites/stabby.png")
    },
   UnitType.SKELLY: {
+    "name": "Skelly",
     "health": 2,
     "damage": 1,
     "movement_points": 4,
@@ -22,6 +24,7 @@ var units = {
     "sprite": preload("res://assets/sprites/skelly.png")
    },
     UnitType.EGG: {
+    "name": "Egg (will spawn soon!)",
     "health": 1,
     "damage": 0,
     "movement_points": 0,
@@ -33,6 +36,7 @@ var units = {
 
 func load_db_values(unit, type):
   var data = units.get(type)
+  unit.unit_name = data.name
   unit.health = data.get("health")
   unit.max_health = unit.health
   unit.movement_points = data.get("movement_points")

@@ -20,6 +20,7 @@ export var max_movement_points: int = movement_points
 export var attack_points: int = 1
 export var max_attack_points: int = attack_points
 export var attack_range: int = 1
+export var unit_name: String = ""
 
 export var ai_controlled: bool = false
 

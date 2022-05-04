@@ -229,7 +229,7 @@ func handle_hex_click(hex):
     var existing_unit = hex_units[0]
     
     # No unit selected, or current team is same as unit in tile
-    if (not selected_unit) and get_current_team() == existing_unit.team:
+    if (not selected_unit or selected_unit.team.controller != Team.ControllerType.PLAYER):
       print("No unit selected, or current team is same as unit in tile")
       deselect()
       print("So, selecting unit on tile")
@@ -344,7 +344,7 @@ func get_shortest_path_to_occupied_tile(from, to, unit):
 func _on_Map_hex_hovered(hex):
   last_hilighted_path = null
   $Map.set_hilighted_path(null)
-  if selected_unit:
+  if selected_unit and selected_unit.team.controller == Team.ControllerType.PLAYER:
     var coordinate = hex.to_coordinate()
     var from_coord = selected_unit.get_coordinate()
     var existing_units = hex.get_units()

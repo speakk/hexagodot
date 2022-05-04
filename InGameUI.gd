@@ -52,5 +52,3 @@ func _on_turn_started(teams, team):
     $Tween.interpolate_property($TurnIndicator, "margin_top", $TurnIndicator.margin_top, 800, 1, Tween.TRANS_EXPO)
     $Tween.start()
   
-func _on_unit_selected(unit):
-  pass
