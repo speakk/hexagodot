@@ -61,23 +61,8 @@ func create_hero():
       connect_unit(hero)
       hero.set_team(team)
       hero.connect("unit_died", self, "on_hero_death")
-      place_unit(hero, hex)
+      $Map.place_unit(hero, hex)
 
-func place_torch(q, r):
-  var TORCH = preload("res://Items/Torch.tscn")
-  var torch = TORCH.instance()
-  var hex = $Map.hexes[Coordinate.new(q, r).to_int()]
-  place_item(torch, hex)
-
-func place_torches():
-  place_torch(-7, 0)
-  place_torch(6, 0)
-  
-  place_torch(0, -7)
-  place_torch(0, 6)
-  
-  place_torch(6, -7)
-  place_torch(-7, 6)
 
 func prep_ui():
   self.connect("wave_started", $InGameUI, "_on_wave_started")
@@ -102,7 +87,7 @@ func enter_scene():
   
   Events.connect("spawner_finished", self, "_on_spawner_finished")
   
-  place_torches()
+  $Map.place_torches()
   
   current_team_index = 0
   var current_team = get_current_team()
@@ -151,7 +136,7 @@ func command_place_unit(args):
     unit.set_team(team)
     unit.add_to_group("in_team")
     connect_unit(unit)
-    place_unit(unit, hex)
+    $Map.place_unit(unit, hex)
   else:
     return false
     
@@ -170,7 +155,7 @@ func command_move_unit(args):
   yield($Map.animate_unit_move(args), "completed")
   var from = args.unit.get_coordinate()
   var to_hex = $Map.hexes[args.path[args.path.size()-1]] 
-  place_unit(args.unit, to_hex, args.path.size() - 1)
+  $Map.place_unit(args.unit, to_hex, args.path.size() - 1)
   Events.emit_signal("unit_moved", args.unit, from, to_hex.to_coordinate())
   return true
   
@@ -287,29 +272,6 @@ func clear_last_selected():
   $Map.hilighted_path = null
   last_hilighted_path = null
 
-func _place_solid(solid, hex, from):
-  solid.global_position = hex.global_position
-  solid.z_index = 1
-  if not from or (from.q == hex.q and from.r == hex.r):
-    call_deferred("emit_signal", "solid_created", hex.to_coordinate())
-  else:
-    call_deferred("emit_signal", "solid_moved", from, hex.to_coordinate())
-    
-func place_item(item, hex, movement_points = 0):
-  if item.get_parent():
-    item/get_parent().remove_child(item)
-  hex.get_node("Items").add_child(item)
-  _place_solid(item, hex, null)
-
-func place_unit(unit, hex, movement_points = 0):
-  if unit.get_parent():
-    unit.get_parent().remove_child(unit)
-  hex.get_node("Units").add_child(unit)
-  var original_from = Coordinate.new(unit.q, unit.r)
-  unit.place(hex.q, hex.r, movement_points)
-  clear_last_selected()
-  
-  _place_solid(unit, hex, original_from)
 
 func end_turn():
   print("Ending turn for team %s" % get_current_team().team_name)
@@ -381,7 +343,7 @@ func _on_spawner_finished(spawner_unit):
   var unit = UnitDB.create_unit(UnitDB.UnitType.SKELLY)
   connect_unit(unit)
   unit.set_team(get_current_team())
-  place_unit(unit, hex)
+  $Map.place_unit(unit, hex)
   
 func get_map():
   return get_node("Map")

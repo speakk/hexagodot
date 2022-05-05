@@ -153,3 +153,44 @@ func get_random_free_hex():
   for hex in hexes_values:
     if hex.get_node("Units").get_child_count() == 0 and hex.get_node("Items").get_child_count() == 0:
       return hex
+
+func _place_solid(solid, hex, from):
+  solid.global_position = hex.global_position
+  solid.z_index = 1
+  if not from or (from.q == hex.q and from.r == hex.r):
+    #call_deferred("emit_signal", "solid_created", hex.to_coordinate())
+    call_deferred("solid_created", hex.to_coordinate())
+  else:
+    #call_deferred("emit_signal", "solid_moved", from, hex.to_coordinate())
+    call_deferred("solid_moved",from, hex.to_coordinate())
+    
+func place_item(item, hex, movement_points = 0):
+  if item.get_parent():
+    item/get_parent().remove_child(item)
+  hex.get_node("Items").add_child(item)
+  _place_solid(item, hex, null)
+
+func place_unit(unit, hex, movement_points = 0):
+  if unit.get_parent():
+    unit.get_parent().remove_child(unit)
+  hex.get_node("Units").add_child(unit)
+  var original_from = Coordinate.new(unit.q, unit.r)
+  unit.place(hex.q, hex.r, movement_points)
+  
+  _place_solid(unit, hex, original_from)
+
+func place_torch(q, r):
+  var TORCH = preload("res://Items/Torch.tscn")
+  var torch = TORCH.instance()
+  var hex = hexes[Coordinate.new(q, r).to_int()]
+  place_item(torch, hex)
+
+func place_torches():
+  place_torch(-7, 0)
+  place_torch(6, 0)
+  
+  place_torch(0, -7)
+  place_torch(0, 6)
+  
+  place_torch(6, -7)
+  place_torch(-7, 6)
