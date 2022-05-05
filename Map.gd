@@ -160,10 +160,10 @@ func _place_solid(solid, hex, from):
   solid.z_index = 1
   if not from or (from.q == hex.q and from.r == hex.r):
     #call_deferred("emit_signal", "solid_created", hex.to_coordinate())
-    call_deferred("solid_created", hex.to_coordinate())
+    call_deferred("_on_solid_created", hex.to_coordinate())
   else:
     #call_deferred("emit_signal", "solid_moved", from, hex.to_coordinate())
-    call_deferred("solid_moved",from, hex.to_coordinate())
+    call_deferred("_on_solid_moved",from, hex.to_coordinate())
     
 func place_item(item, hex, movement_points = 0):
   if item.get_parent():
