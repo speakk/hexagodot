@@ -4,7 +4,7 @@ class_name Unit
 
 signal unit_died(unit)
 
-const UNIT_DEATH = preload("res://UnitDeath.tscn")
+const UNIT_DEATH = preload("res://Effects/UnitDeath.tscn")
 
 var team
 

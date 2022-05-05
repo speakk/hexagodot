@@ -61,7 +61,7 @@ func create_hero():
       connect_unit(hero)
       hero.set_team(team)
       hero.connect("unit_died", self, "on_hero_death")
-      $Map.place_unit(hero, hex)
+      $Map.spawn_unit(hero, hex)
 
 
 func prep_ui():
@@ -136,7 +136,7 @@ func command_place_unit(args):
     unit.set_team(team)
     unit.add_to_group("in_team")
     connect_unit(unit)
-    $Map.place_unit(unit, hex)
+    $Map.spawn_unit(unit, hex)
   else:
     return false
     
@@ -343,7 +343,7 @@ func _on_spawner_finished(spawner_unit):
   var unit = UnitDB.create_unit(UnitDB.UnitType.SKELLY)
   connect_unit(unit)
   unit.set_team(get_current_team())
-  $Map.place_unit(unit, hex)
+  $Map.spawn_unit(unit, hex)
   
 func get_map():
   return get_node("Map")

@@ -7,6 +7,7 @@ signal hex_hovered(hex)
 
 const HEX = preload("Hex.tscn")
 const UNIT = preload("Units/Unit.tscn")
+const UNIT_SPAWN_FX = preload("Effects/UnitSpawn.tscn")
 
 export(MapTools.MapShape) var map_shape
 export(int) var map_radius = 7
@@ -169,6 +170,13 @@ func place_item(item, hex, movement_points = 0):
     item/get_parent().remove_child(item)
   hex.get_node("Items").add_child(item)
   _place_solid(item, hex, null)
+
+func spawn_unit(unit, hex):
+  hex.get_node("Units").add_child(unit)
+  unit.place(hex.q, hex.r, 0)
+  var fx = UNIT_SPAWN_FX.instance()
+  unit.add_child(fx)
+  _place_solid(unit, hex, null)
 
 func place_unit(unit, hex, movement_points = 0):
   if unit.get_parent():
