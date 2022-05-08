@@ -115,3 +115,9 @@ func flash_white():
   $Tween.remove_all()
   $Tween.interpolate_property($Sprite.material, "shader_param/whiteness", 1.0, 0.0, 0.4)
   $Tween.start()
+
+func consume_item(item):
+  if item.has_method("apply_bonus"):
+    item.apply_bonus(self)
+    
+  item.queue_free()

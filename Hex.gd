@@ -23,6 +23,9 @@ const BASE_COLOR = Color(1, 1, 1)
 const HOVER_COLOR = Color(1, 0.3, 0.4)
 const HILIGHT_COLOR = Color(1, 1, 0.0)
 
+func _ready():
+  Events.connect("unit_entered_hex", self, "_on_unit_entered_hex")
+
 func _process(dt):
   if path_hilight:
     $Hexagon.modulate = HILIGHT_COLOR
@@ -57,6 +60,9 @@ func get_units():
       alive_units.push_back(unit)
   return alive_units
 
+func get_items():
+  return $Items.get_children()
+
 func to_coordinate():
   return Coordinate.new(q, r)
 
@@ -68,3 +74,9 @@ func set_point_available_indicator(value):
     $PointAvailableIndicator.modulate = Color(1,1,1)
   else:
     $PointAvailableIndicator.modulate = Color(1,0,0)
+
+func _on_unit_entered_hex(unit, hex):
+  if hex == self:
+    var items = get_items()
+    for item in items:
+      unit.consume_item(item)

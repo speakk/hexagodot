@@ -185,6 +185,7 @@ func place_unit(unit, hex, movement_points = 0):
   hex.get_node("Units").add_child(unit)
   var original_from = Coordinate.new(unit.q, unit.r)
   unit.place(hex.q, hex.r, movement_points)
+  Events.emit_signal("unit_entered_hex", unit, hex)
   
   _place_solid(unit, hex, original_from)
 
