@@ -50,7 +50,12 @@ func _on_input_event(viewport, event, shape_idx):
       emit_signal("hex_clicked", self)
 
 func get_units():
-  return $Units.get_children()
+  var units = $Units.get_children()
+  var alive_units = []
+  for unit in units:
+    if unit.alive:
+      alive_units.push_back(unit)
+  return alive_units
 
 func to_coordinate():
   return Coordinate.new(q, r)

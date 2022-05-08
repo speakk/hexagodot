@@ -22,6 +22,8 @@ export var unit_name: String = ""
 
 export var ai_controlled: bool = false
 
+const is_unit = true
+
 var unit_type
 
 func _ready():
@@ -72,6 +74,8 @@ func take_damage(amount):
   if health <= 0:
     alive = false
     Events.emit_signal("unit_died", self)
+    if unit_type == UnitDB.UnitType.HERO:
+      Events.emit_signal("hero_died", self)
     #self.queue_free()
     self.set_alive(false)
     var death_anim = UNIT_DEATH.instance()

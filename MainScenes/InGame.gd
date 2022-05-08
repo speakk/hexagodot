@@ -45,7 +45,8 @@ func prep_teams():
   add_team("AI 1", Team.ControllerType.AI, Color(0, 0, 1))
 
 func connect_unit(unit):
-  unit.connect("unit_died", self, "handle_unit_death")
+  Events.connect("unit_died", self, "handle_unit_death")
+  Events.connect("hero_died", self, "on_hero_death")
 
 func handle_unit_death(unit):
   emit_signal("solid_removed", unit.get_coordinate())
@@ -53,14 +54,10 @@ func handle_unit_death(unit):
 func create_hero():
   for team in $Teams.get_children():
     if team.controller == Team.ControllerType.PLAYER:
-      #var hex = $Map.hexes.values()[randi() % $Map.hexes.size()]
       var hex = $Map.get_random_free_hex()
-      #var hero = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.HERO)
-      #var hero = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.HERO)
       var hero = UnitDB.create_unit(UnitDB.UnitType.HERO)
       connect_unit(hero)
       hero.set_team(team)
-      hero.connect("unit_died", self, "on_hero_death")
       $Map.spawn_unit(hero, hex)
 
 
@@ -102,7 +99,6 @@ func _process(_delta):
 
 func execute_command(command_func: FuncRef, args):
     yield(get_tree(), "idle_frame")
-    #$CommandSequencer.execute_command(command_func, args)
     var result = yield(command_func.call_func(args), "completed")
     return result
 
@@ -120,19 +116,11 @@ func execute_commands(commands: Array):
 # Refactor later to get rid of "if" here and do it at the place of hex click handling
 func command_place_unit(args):
   yield(get_tree(), "idle_frame")
-  #var current_team = get_current_team()
   var team = args.team
   
   if team.controller == Team.ControllerType.AI:
     var hex = args.hex
     var unit = UnitDB.create_unit(UnitDB.UnitType.EGG)
-#    if current_team.controller == Team.ControllerType.AI:
-#      #unit = AI_UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.EGG)
-#      #unit = AI_UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.EGG)
-#      unit = UnitDB.create_unit(UnitDB.UnitType.EGG)
-#    else:
-#      pass
-      #unit = UNIT.instance().init(hex.q, hex.r, UnitDB.UnitType.SKELLY)
     unit.set_team(team)
     unit.add_to_group("in_team")
     connect_unit(unit)
@@ -179,7 +167,7 @@ func command_attack(args):
 func deselect():
   for key in $Map.hexes:
     var hex = $Map.hexes[key]
-    for unit in hex.get_node("Units").get_children():
+    for unit in hex.get_units():
       unit.deselect()
   
   selected_unit = null
@@ -209,7 +197,7 @@ func handle_hex_click(hex):
     
   print("Had last hilighted path, picking the last hex from that")
   
-  var hex_units = original_target_hex.get_node("Units").get_children()
+  var hex_units = original_target_hex.get_units()
   print("Hex units size", hex_units.size())
   if hex_units.size() > 0:
     print("There was a unit on the tile!")
