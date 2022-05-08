@@ -9,6 +9,9 @@ var last_hilighted_path
 var round_counter = 0
 var wave_counter = 0
 
+const ITEM_SPAWNER = preload("res://Items/ItemSpawner.gd")
+var item_spawner = ITEM_SPAWNER.new()
+
 export var wave_length: int = 3
 
 signal team_added(team)
@@ -26,10 +29,7 @@ func add_team(name, controller, color):
   team.connect("team_turn_finished", self, "end_turn")
   team.connect("try_to_place_unit", self, "try_to_place_unit")
   team.connect("try_to_move_and_attack", self, "try_to_move_and_attack")
-  
-  if controller == Team.ControllerType.PLAYER:
-    team.connect("unit_died", self, "handle_hero_death")
-  
+
   emit_signal("team_added", team)
 
 func start_turn(team):
@@ -157,6 +157,7 @@ func command_move_unit(args):
   var to_hex = $Map.hexes[args.path[args.path.size()-1]] 
   $Map.place_unit(args.unit, to_hex, args.path.size() - 1)
   Events.emit_signal("unit_moved", args.unit, from, to_hex.to_coordinate())
+  deselect()
   return true
   
 func command_attack(args):

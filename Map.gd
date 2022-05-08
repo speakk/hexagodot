@@ -22,6 +22,7 @@ var astar = AStar2D.new()
 var hilighted_path
 
 func _ready():
+  Events.connect("item_spawned", self, "_on_item_spawned")
   var coordinates = MapTools.create_grid(map_radius, map_shape)
   for coordinate in coordinates:
     var hex = HEX.instance().init(coordinate.q, coordinate.r)
@@ -202,3 +203,9 @@ func place_torches():
   
   place_torch(6, -7)
   place_torch(-7, 6)
+
+func _on_item_spawned(item, coordinate):
+  var hex = hexes[coordinate.to_int()]
+  hex.get_node("Items").add_child(item)
+  if item.solid:
+    _place_solid(item, hex, null)

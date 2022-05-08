@@ -2,8 +2,6 @@ extends Node2D
 
 class_name Unit
 
-signal unit_died(unit)
-
 const UNIT_DEATH = preload("res://Effects/UnitDeath.tscn")
 
 var team
@@ -73,7 +71,7 @@ func take_damage(amount):
   Events.emit_signal("unit_took_damage", self, amount)
   if health <= 0:
     alive = false
-    emit_signal("unit_died", self)
+    Events.emit_signal("unit_died", self)
     #self.queue_free()
     self.set_alive(false)
     var death_anim = UNIT_DEATH.instance()

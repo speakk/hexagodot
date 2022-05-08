@@ -12,7 +12,7 @@ var units = {
     "movement_points": 5,
     "attack_points": 1,
     "attack_range": 1,
-    "sprite": preload("res://assets/sprites/stabby.png")
+    "scene": preload("res://Units/Hero.tscn")
    },
   UnitType.SKELLY: {
     "name": "Skelly",
