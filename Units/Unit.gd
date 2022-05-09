@@ -28,6 +28,7 @@ var unit_type
 
 func _ready():
   $Sprite.material = $Sprite.material.duplicate()
+  $DamageNumberProto.visible = false
 
 func init(type):
   unit_type = type
@@ -71,6 +72,9 @@ func take_damage(amount):
   _set_health(health - amount)
   flash_white()
   Events.emit_signal("unit_took_damage", self, amount)
+  
+  show_damage_amount(amount)
+  
   if health <= 0:
     alive = false
     Events.emit_signal("unit_died", self)
@@ -81,7 +85,21 @@ func take_damage(amount):
     var death_anim = UNIT_DEATH.instance()
     #death_anim.global_position = global_position
     get_parent().add_child(death_anim)
-  
+
+const THEME = preload("res://themes/in_game_theme.tres")
+
+func show_damage_amount(amount):
+  var number_node = $DamageNumberProto.duplicate()
+  var label = number_node.get_node("Label")
+  label.text = "-%s" % amount
+  label.modulate = Color(1, 0, 0)
+  number_node.visible = true
+  get_parent().add_child(number_node)
+  $DamageTween.interpolate_property(number_node, "position:y", -40, -60, 0.5)
+  $DamageTween.start()
+  yield($DamageTween, "tween_completed")
+  number_node.queue_free()
+
 func _set_health(value):
   health = value
   $HealthBar.value = health
@@ -112,7 +130,8 @@ func process_turn():
       yield(AI.attack_closest_enemy(self), "completed")
 
 func flash_white():
-  $Tween.remove_all()
+  #$Tween.remove_all()
+  $Tween.remove($Sprite.material, "shader_param/whiteness")
   $Tween.interpolate_property($Sprite.material, "shader_param/whiteness", 1.0, 0.0, 0.4)
   $Tween.start()
 
