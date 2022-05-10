@@ -84,7 +84,7 @@ func take_damage(amount):
     self.set_alive(false)
     var death_anim = UNIT_DEATH.instance()
     #death_anim.global_position = global_position
-    get_parent().add_child(death_anim)
+    get_parent().get_parent().add_child(death_anim)
 
 const THEME = preload("res://themes/in_game_theme.tres")
 
@@ -94,7 +94,7 @@ func show_damage_amount(amount):
   label.text = "-%s" % amount
   label.modulate = Color(1, 0, 0)
   number_node.visible = true
-  get_parent().add_child(number_node)
+  get_parent().get_parent().add_child(number_node)
   $DamageTween.interpolate_property(number_node, "position:y", -40, -60, 0.5)
   $DamageTween.start()
   yield($DamageTween, "tween_completed")
