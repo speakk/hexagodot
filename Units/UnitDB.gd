@@ -37,6 +37,7 @@ var units = {
 func load_db_values(unit, type):
   var data = units.get(type)
   unit.unit_name = data.name
+  unit.unit_type = type
   unit.health = data.get("health")
   unit.max_health = unit.health
   unit.movement_points = data.get("movement_points")
