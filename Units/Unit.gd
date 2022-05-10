@@ -29,6 +29,7 @@ var unit_type
 func _ready():
   $Sprite.material = $Sprite.material.duplicate()
   $DamageNumberProto.visible = false
+  $HealthNumberProto.visible = false
 
 func init(type):
   unit_type = type
@@ -86,13 +87,27 @@ func take_damage(amount):
     #death_anim.global_position = global_position
     get_parent().get_parent().add_child(death_anim)
 
+func heal(amount):
+  _set_health(health + amount)
+  show_healing_amount(amount)
+  
+func show_healing_amount(amount):
+  var number_node = $HealthNumberProto.duplicate()
+  var label = number_node.get_node("Label")
+  label.text = "%s" % amount
+  number_node.visible = true
+  get_parent().get_parent().add_child(number_node)
+  $HealthTween.interpolate_property(number_node, "position:y", -40, -60, 0.5)
+  $HealthTween.start()
+  yield($HealthTween, "tween_completed")
+  number_node.queue_free()
+
 const THEME = preload("res://themes/in_game_theme.tres")
 
 func show_damage_amount(amount):
   var number_node = $DamageNumberProto.duplicate()
   var label = number_node.get_node("Label")
   label.text = "-%s" % amount
-  label.modulate = Color(1, 0, 0)
   number_node.visible = true
   get_parent().get_parent().add_child(number_node)
   $DamageTween.interpolate_property(number_node, "position:y", -40, -60, 0.5)

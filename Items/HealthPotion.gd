@@ -1,4 +1,4 @@
 extends Item
 
 func apply_bonus(unit):
-  unit.health += 1
+  unit.heal(1)

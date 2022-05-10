@@ -13,9 +13,13 @@ texture = ExtResource( 2 )
 visible = false
 
 [node name="Torch" parent="." index="8" instance=ExtResource( 3 )]
-position = Vector2( 12, -11 )
+position = Vector2( 11, 1 )
 
 [node name="Sprite" parent="Torch" index="0"]
 scale = Vector2( 0.4, 0.4 )
+
+[node name="Label" parent="HealthNumberProto" index="0"]
+custom_colors/font_color = Color( 0.482353, 1, 0.337255, 1 )
+custom_constants/shadow_offset_x = 0
 
 [editable path="Torch"]
