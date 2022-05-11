@@ -135,15 +135,16 @@ func command_move_unit(args):
   if args.path.size() <= 1:
     return true
   
-  if args.path.size()-1 > args.unit.movement_points:
+  if args.path.size() - 1 > args.unit.movement_points:
     yield(get_tree(), "idle_frame")
     print("UH, path size was over yea")
     return false
     
   yield($Map.animate_unit_move(args), "completed")
   var from = args.unit.get_coordinate()
-  var to_hex = $Map.hexes[args.path[args.path.size()-1]] 
-  $Map.place_unit(args.unit, to_hex, args.path.size() - 1)
+  var to_hex = $Map.hexes[args.path[args.path.size() - 1]] 
+  var movement_points = args.path.size() - 1
+  $Map.place_unit(args.unit, to_hex, movement_points)
   Events.emit_signal("unit_moved", args.unit, from, to_hex.to_coordinate())
   deselect()
   return true
@@ -284,7 +285,7 @@ func get_shortest_path_to_occupied_tile(from, to, unit):
   for neighbor_direction in neighbor_directions:
     var neighbor_coordinate = MapTools.coordinate_add(to, neighbor_direction)
     if $Map.astar.has_point(neighbor_coordinate.to_int()):
-      potential_paths.push_back($Map.get_astar_path(from, neighbor_coordinate, unit.movement_points))
+      potential_paths.push_back($Map.get_astar_path(from, neighbor_coordinate, unit.movement_points, unit.attack_range))
   
   var shortest_path
   for potential_path in potential_paths:
@@ -324,7 +325,7 @@ func _on_round_started(round_number: int, _wave_length):
     wave_counter += 1
     emit_signal("wave_started", wave_counter)
     var ai_team = get_first_ai_team()
-    for i in range(wave_counter):
+    for i in range(wave_counter + 2):
       yield(AI.spawn_random_egg(ai_team), "completed")
 
 func _on_spawner_finished(spawner_unit):

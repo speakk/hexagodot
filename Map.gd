@@ -80,14 +80,18 @@ func _on_hex_hovered(hex: Hex):
 func set_hilighted_path(_path):
   hilighted_path = _path
 
-func get_astar_path(from: Coordinate, to: Coordinate, max_length):
+func get_astar_path(from: Coordinate, to: Coordinate, max_length, trim_end = 0):
+  print("get_astar_path, max_length: %s  trim_end: %s" % [max_length, trim_end])
+  if trim_end > 0:
+    trim_end = trim_end - 1
+  
   if max_length == 0:
     return null
+    
   var path = astar.get_id_path(from.to_int(), to.to_int())
-  if max_length:
-    # max_length+1 because unit location gets included in path
-    path.resize(min(path.size(), max_length+1))
   
+  path.resize(min(path.size()-trim_end, max_length+1))
+
   if path.size() > 0:
     return path
   
@@ -102,7 +106,7 @@ func animate_unit_move(args):
   
   var index = 1 # Skip first one as it's the original position
   #unit.set_as_toplevel(true)
-  while index < path.size():
+  while index < path.size() + 1 - unit.attack_range:
     var coordinate = Coordinate.new().from_int(path[index])
     var original = MapTools.pointy_hex_to_pixel(unit_coord)
     var from = unit.position

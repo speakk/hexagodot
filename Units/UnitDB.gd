@@ -11,7 +11,7 @@ var units = {
     "damage": 1,
     "movement_points": 5,
     "attack_points": 1,
-    "attack_range": 1,
+    "attack_range": 2,
     "scene": preload("res://Units/Hero.tscn")
    },
   UnitType.SKELLY: {

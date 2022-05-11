@@ -88,13 +88,15 @@ func take_damage(amount):
     get_parent().get_parent().add_child(death_anim)
 
 func heal(amount):
+  if health + amount > max_health:
+    return false
   _set_health(health + amount)
   show_healing_amount(amount)
   
 func show_healing_amount(amount):
   var number_node = $HealthNumberProto.duplicate()
   var label = number_node.get_node("Label")
-  label.text = "%s" % amount
+  label.text = "-%s" % amount
   number_node.visible = true
   get_parent().get_parent().add_child(number_node)
   $HealthTween.interpolate_property(number_node, "position:y", -40, -60, 0.5)
