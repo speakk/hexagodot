@@ -56,6 +56,8 @@ texture = ExtResource( 6 )
 
 [node name="HealthTween" type="Tween" parent="."]
 
+[node name="ProjectileTween" type="Tween" parent="."]
+
 [node name="DamageNumberProto" type="Node2D" parent="."]
 position = Vector2( -9, -58 )
 z_index = 3

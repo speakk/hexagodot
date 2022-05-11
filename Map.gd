@@ -124,9 +124,12 @@ func animate_unit_move(args):
   # Safeguard in case no distance was traveled
   yield(get_tree(), "idle_frame")
 
-func animate_unit_attack(args):
-  var by = args.by
-  var against = args.against
+func _animate_ranged_attack(by: Unit, against: Unit):
+  yield(get_tree(), "idle_frame")
+  yield(by.perform_ranged_attack_animation(against), "completed")
+
+func _animate_meelee_attack(by: Unit, against: Unit):
+  yield(get_tree(), "idle_frame")
   
   var original_position = Vector2(by.global_position)
   print("ORIG %s, %s" % [original_position.x, original_position.y])
@@ -152,6 +155,16 @@ func animate_unit_attack(args):
     )
   result = tween.start()
   yield(tween, "tween_completed")
+  
+func animate_unit_attack(args):
+  yield(get_tree(), "idle_frame")
+  var by = args.by
+  var against = args.against
+  
+  if by.attack_range > 1:
+    yield(_animate_ranged_attack(by, against), "completed")
+  else:
+    yield(_animate_meelee_attack(by, against), "completed")
 
 func get_random_free_hex():
   var hexes_values = hexes.values()

@@ -3,6 +3,7 @@ extends Node2D
 class_name Unit
 
 const UNIT_DEATH = preload("res://Effects/UnitDeath.tscn")
+const PROJECTILE = preload("res://Projectile.tscn")
 
 var team
 
@@ -157,3 +158,14 @@ func consume_item(item):
     item.apply_bonus(self)
     
   item.queue_free()
+
+func perform_ranged_attack_animation(against):
+  print("perform_ranged_attack_animation")
+  var projectile = PROJECTILE.instance()
+  get_parent().get_parent().add_child(projectile)
+  projectile.global_position = global_position
+  projectile.z_index = 2
+  $ProjectileTween.interpolate_property(projectile, "global_position", projectile.global_position, against.global_position, 0.2)
+  $ProjectileTween.start()
+  yield($ProjectileTween, "tween_completed")
+  projectile.queue_free()
