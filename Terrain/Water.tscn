@@ -1,9 +1,30 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Terrain/Hex.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/sprites/terrain/waterhex.png" type="Texture" id=2]
+[ext_resource path="res://Terrain/Water.gdshader" type="Shader" id=3]
+[ext_resource path="res://Terrain/Water.gd" type="Script" id=4]
+
+[sub_resource type="CanvasItemMaterial" id=3]
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = ExtResource( 3 )
+shader_param/calculatedOffset = 0.0
 
 [node name="Water" instance=ExtResource( 1 )]
+material = SubResource( 3 )
+script = ExtResource( 4 )
 
-[node name="Hexagon" parent="." index="0"]
+[node name="BackBufferCopy" type="BackBufferCopy" parent="." index="0"]
+copy_mode = 2
+
+[node name="Hexagon2" type="Sprite" parent="BackBufferCopy" index="0"]
+light_mask = 2
+material = SubResource( 2 )
+position = Vector2( 0, 7 )
+texture = ExtResource( 2 )
+
+[node name="Hexagon" parent="." index="1"]
+visible = false
+material = SubResource( 2 )
 texture = ExtResource( 2 )
