@@ -4,7 +4,10 @@ extends Hex
 
 func _ready():
   #$BackBufferCopy/Hexagon.material = $BackBufferCopy/Hexagon.material.duplicate(true)
-  $BackBufferCopy/Hexagon2.material = $BackBufferCopy/Hexagon2.material.duplicate(true)
+  #$BackBufferCopy/Hexagon2.material = $BackBufferCopy/Hexagon2.material.duplicate(true)
+  #if randf() > 0.6:
+  #  $Hexagon2.material = $Hexagon2.material.duplicate(true)
+  #$Hexagon2.material = $Hexagon2.material.duplicate()
   #$Hexagon.set_materi
   print("DUPAL")
 
@@ -18,3 +21,4 @@ func _process(delta):
   #self.material.set_shader_param("calculatedOffset", calculatedOffset);
   #$Hexagon.material.set_shader_param("calculatedOffset", position.y/H * 2);
   #$Hexagon.material.set_shader_param("calculatedOffset", offset)
+

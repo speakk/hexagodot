@@ -8,6 +8,9 @@ func get_current_scene():
 func get_current_viewport():
   return $Containers.get_child(0).get_child(0)
 
+func _process(_d):
+  var img = get_viewport().get_texture().get_data()
+
 func switch_scenes(sceneName):
   var to_scene = load("res://MainScenes/%s.tscn" % sceneName).instance()
   
