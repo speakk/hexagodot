@@ -165,7 +165,7 @@ func perform_ranged_attack_animation(against):
   get_parent().get_parent().add_child(projectile)
   projectile.global_position = global_position
   projectile.z_index = 2
-  $ProjectileTween.interpolate_property(projectile, "global_position", projectile.global_position, against.global_position, 0.2)
+  $ProjectileTween.interpolate_property(projectile, "global_position", projectile.global_position, against.global_position, 0.3)
   $ProjectileTween.start()
   yield($ProjectileTween, "tween_completed")
   projectile.queue_free()

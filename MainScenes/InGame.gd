@@ -59,6 +59,11 @@ func create_hero():
       connect_unit(hero)
       hero.set_team(team)
       $Map.spawn_unit(hero, hex)
+      
+#      hex = $Map.get_random_free_hex()
+#      var helper = UnitDB.create_unit(UnitDB.UnitType.HELPER)
+#      helper.set_team(team)
+#      $Map.spawn_unit(helper, hex)
 
 
 func prep_ui():
@@ -85,6 +90,7 @@ func enter_scene():
   Events.connect("spawner_finished", self, "_on_spawner_finished")
   
   $Map.place_torches()
+  #$Map.place_terrain_blocks()
   
   current_team_index = 0
   var current_team = get_current_team()

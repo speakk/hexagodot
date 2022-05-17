@@ -5,6 +5,9 @@ func get_current_scene():
   var scene = nextViewportContainer.get_child(0).get_child(0)
   return scene
 
+func get_current_viewport():
+  return $Containers.get_child(0).get_child(0)
+
 func switch_scenes(sceneName):
   var to_scene = load("res://MainScenes/%s.tscn" % sceneName).instance()
   

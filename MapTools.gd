@@ -4,6 +4,7 @@ const HEX_SIZE: float = (32.0 / 2.0) * 1.1
 const HEX_LAYOUT_SIZE_X: float = HEX_SIZE
 const HEX_LAYOUT_SIZE_Y: float = HEX_SIZE * 1.2
 
+
 const POINTY_HEX_MATRIX = {
   f0 = sqrt(3),
   f1 = sqrt(3) / 2,
@@ -20,6 +21,27 @@ enum MapShape {
     Square
 }
 
+static func generate_terrain(hexes):
+  var noise = OpenSimplexNoise.new()
+  noise.seed = randi()
+  noise.octaves = 2
+  noise.period = 3
+  noise.persistence = 0.5
+  
+  for hex in hexes:
+    var value = noise.get_noise_2d(hex.q, hex.r)
+    var type = TerrainDB.TerrainType.Dirt
+    if value > 0:
+      type = TerrainDB.TerrainType.Grass
+    
+    if value > 0.4:
+      type = TerrainDB.TerrainType.Water
+    elif noise.get_noise_2d(hex.q + 1, hex.r + 1) > 0.3:
+      #type = TerrainDB.TerrainType.Mountain
+      hex.raised = true
+    
+    hex.terrain_type = type
+
 static func create_grid(radius: int, shape) -> Array:
     var hexes: Array = []
 
@@ -29,7 +51,7 @@ static func create_grid(radius: int, shape) -> Array:
                 var r2: int = int(min(radius, -q + radius))
 
                 for r in range(r1,r2):
-                    hexes.push_back(Coordinate.new(q, r))
+                    hexes.push_back(HexPrototype.new(q, r))
 
     elif shape == MapShape.Square:
       var top = floor(-radius / 2)
@@ -39,7 +61,9 @@ static func create_grid(radius: int, shape) -> Array:
       for r in range(top, bottom):
         var r_offset = floor(r/2)
         for q in range(left - r_offset, right - r_offset):
-          hexes.push_back(Coordinate.new(q, r))
+          hexes.push_back(HexPrototype.new(q, r))
+    
+    generate_terrain(hexes)
 
     return hexes
 

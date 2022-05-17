@@ -5,8 +5,12 @@ class_name Hex
 export var q = 0
 export var r = 0
 export var path_hilight: bool = false
+export var passable: bool = true
+export var raised: bool = false
 
 var hovered = false
+
+var original_position
 
 signal hex_clicked(Hex)
 signal hex_hovered(Hex)
@@ -17,6 +21,7 @@ func init(_q, _r):
   r = _r
 
   MapTools.move_entity_to_coordinate(self, Coordinate.new(_q, _r))
+  original_position = position
   return self
 
 const BASE_COLOR = Color(1, 1, 1)
@@ -38,6 +43,9 @@ func _process(dt):
   
   if not path_hilight and not hovered:
     $Hexagon.modulate = $Hexagon.modulate.linear_interpolate(BASE_COLOR, 0.15)
+  
+  if raised:
+    position = original_position + Vector2(0, -10)
     
 func _on_mouse_entered():
   hovered = true

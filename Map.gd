@@ -5,7 +5,7 @@ class_name Map
 signal hex_clicked(hex)
 signal hex_hovered(hex)
 
-const HEX = preload("Hex.tscn")
+const HEX = preload("Terrain/Hex.tscn")
 const UNIT = preload("Units/Unit.tscn")
 const UNIT_SPAWN_FX = preload("Effects/UnitSpawn.tscn")
 
@@ -25,13 +25,16 @@ func _ready():
   Events.connect("item_spawned", self, "_on_item_spawned")
   var coordinates = MapTools.create_grid(map_radius, map_shape)
   for coordinate in coordinates:
-    var hex = HEX.instance().init(coordinate.q, coordinate.r)
+    var hex = TerrainDB.create_terrain(coordinate.terrain_type, coordinate.q, coordinate.r)
+    hex.raised = coordinate.raised
+    #var hex = HEX.instance().init(coordinate.q, coordinate.r)
     hex.connect("hex_clicked", self, "_on_hex_clicked")
     hex.connect("hex_hovered", self, "_on_hex_hovered")
     hex.connect("hex_hover_exited", self, "_on_hex_hovered_exited")
     add_child(hex)
     hexes[coordinate.to_int()] = hex
-    astar.add_point(coordinate.to_int(), MapTools.pointy_hex_to_pixel(coordinate))
+    if hex.passable:
+      astar.add_point(coordinate.to_int(), MapTools.pointy_hex_to_pixel(coordinate))
   
   for coordinate in coordinates:
     var neighbor_directions = MapTools.get_neighbor_directions()
@@ -183,7 +186,7 @@ func _place_solid(solid, hex, from):
     #call_deferred("emit_signal", "solid_moved", from, hex.to_coordinate())
     call_deferred("_on_solid_moved",from, hex.to_coordinate())
     
-func place_item(item, hex, movement_points = 0):
+func place_item(item, hex):
   if item.get_parent():
     item/get_parent().remove_child(item)
   hex.get_node("Items").add_child(item)
@@ -221,6 +224,13 @@ func place_torches():
   
   place_torch(6, -7)
   place_torch(-7, 6)
+
+#func place_terrain_blocks():
+#  var BASIC_BLOCK = preload("res://Terrain/BasicBlock.tscn")
+#
+#  for i in range(12):
+#    var basic_block = BASIC_BLOCK.instance()
+#    place_item(basic_block, get_random_free_hex())
 
 func _on_item_spawned(item, coordinate):
   var hex = hexes[coordinate.to_int()]

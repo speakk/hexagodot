@@ -27,7 +27,12 @@ _global_script_classes=[ {
 "base": "YSort",
 "class": "Hex",
 "language": "GDScript",
-"path": "res://Hex.gd"
+"path": "res://Terrain/Hex.gd"
+}, {
+"base": "Coordinate",
+"class": "HexPrototype",
+"language": "GDScript",
+"path": "res://HexPrototype.gd"
 }, {
 "base": "Node2D",
 "class": "Item",
@@ -59,6 +64,7 @@ _global_script_class_icons={
 "Controller": "",
 "Coordinate": "",
 "Hex": "",
+"HexPrototype": "",
 "Item": "",
 "Map": "",
 "MapTools": "",
@@ -80,6 +86,8 @@ Events="*res://Events.gd"
 AI="*res://AI.gd"
 ParticleCache="*res://ParticleCache.gd"
 ItemDB="*res://Items/ItemDB.gd"
+TerrainDB="*res://Terrain/TerrainDB.gd"
+PixelPerfectScaler="*res://PixelPerfectScaler.gd"
 
 [debug]
 
@@ -90,7 +98,6 @@ gdscript/warnings/unused_class_variable=true
 window/size/width=720
 window/size/height=480
 window/stretch/mode="viewport"
-window/stretch/aspect="keep"
 
 [gui]
 
