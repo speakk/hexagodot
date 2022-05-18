@@ -30,7 +30,7 @@ var units = {
     "movement_points": 4,
     "attack_points": 1,
     "attack_range": 1,
-    "sprite": preload("res://assets/sprites/helper.png")
+    "scene": preload("res://Units/Helper.tscn")
    },
     UnitType.EGG: {
     "name": "Egg (will spawn soon!)",

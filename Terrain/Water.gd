@@ -3,6 +3,7 @@ extends Hex
 #export var offset = 320
 
 func _ready():
+  passable = false
   #$BackBufferCopy/Hexagon.material = $BackBufferCopy/Hexagon.material.duplicate(true)
   #$BackBufferCopy/Hexagon2.material = $BackBufferCopy/Hexagon2.material.duplicate(true)
   #if randf() > 0.6:

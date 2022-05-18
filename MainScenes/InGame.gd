@@ -60,10 +60,10 @@ func create_hero():
       hero.set_team(team)
       $Map.spawn_unit(hero, hex)
       
-#      hex = $Map.get_random_free_hex()
-#      var helper = UnitDB.create_unit(UnitDB.UnitType.HELPER)
-#      helper.set_team(team)
-#      $Map.spawn_unit(helper, hex)
+      hex = $Map.get_random_free_hex()
+      var helper = UnitDB.create_unit(UnitDB.UnitType.HELPER)
+      helper.set_team(team)
+      $Map.spawn_unit(helper, hex)
 
 
 func prep_ui():
