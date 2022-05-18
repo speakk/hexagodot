@@ -1,7 +1,7 @@
 extends Node
 
 enum UnitType {
-  HERO, SKELLY, EGG, HELPER
+  HERO, SKELLY, EGG, HELPER, GOLEM
 }
 
 var units = {
@@ -31,6 +31,15 @@ var units = {
     "attack_points": 1,
     "attack_range": 1,
     "scene": preload("res://Units/Helper.tscn")
+   },
+  UnitType.GOLEM: {
+    "name": "Golem (slow but steady)",
+    "health": 3,
+    "damage": 2,
+    "movement_points": 2,
+    "attack_points": 1,
+    "attack_range": 1,
+    "scene": preload("res://Units/Golem.tscn")
    },
     UnitType.EGG: {
     "name": "Egg (will spawn soon!)",

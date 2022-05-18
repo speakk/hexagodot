@@ -29,7 +29,7 @@ func get_team_units():
   var team_units = []
   var units = get_tree().get_nodes_in_group("unit_in_team")
   for unit in units:
-    if unit.is_in_group(team_name):
+    if unit.is_in_group(team_name) and unit.alive:
       team_units.push_back(unit)
   
   return team_units
@@ -38,7 +38,7 @@ func get_enemy_units():
   var enemy_units = []
   var units = get_tree().get_nodes_in_group("unit_in_team")
   for unit in units:
-    if not unit.is_in_group(team_name):
+    if not unit.is_in_group(team_name) and unit.alive:
       enemy_units.push_back(unit)
       
   return enemy_units

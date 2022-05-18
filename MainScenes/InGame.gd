@@ -336,7 +336,9 @@ func _on_round_started(round_number: int, _wave_length):
 
 func _on_spawner_finished(spawner_unit):
   var hex = $Map.hexes[spawner_unit.get_coordinate().to_int()]
-  var unit = UnitDB.create_unit(UnitDB.UnitType.SKELLY)
+  var types = [UnitDB.UnitType.SKELLY, UnitDB.UnitType.GOLEM]
+  var type = types[randi() % types.size()]
+  var unit = UnitDB.create_unit(type)
   connect_unit(unit)
   unit.set_team(get_current_team())
   $Map.spawn_unit(unit, hex)
