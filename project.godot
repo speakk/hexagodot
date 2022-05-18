@@ -91,6 +91,7 @@ PixelPerfectScaler="*res://PixelPerfectScaler.gd"
 
 [debug]
 
+settings/stdout/print_fps=true
 gdscript/warnings/unused_class_variable=true
 
 [display]

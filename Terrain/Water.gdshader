@@ -26,7 +26,7 @@ void fragment() {
 ////    COLOR = vec4(texture(SCREEN_TEXTURE, vec2(uv.x, uv.y)));
 //    COLOR = (texture_color * 0.5 + screen_color * 0.5) * vec4(1.,1.,1., texture_color.a);
 
-  float distortion = texture(noise, UV*scale*distortion_scale + TIME * 0.1).x * intensity;
+  float distortion = texture(noise, UV*scale*distortion_scale + TIME * 0.1 + random_float).x * intensity;
   vec2 dist_uv = vec2(UV.x - distortion * 0.5 + 0.25, UV.y);
   
   vec4 texture_color = texture(TEXTURE, dist_uv);

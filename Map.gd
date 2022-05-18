@@ -173,8 +173,10 @@ func get_random_free_hex():
   var hexes_values = hexes.values()
   hexes_values.shuffle()
   for hex in hexes_values:
-    if hex.get_node("Units").get_child_count() == 0 and hex.get_node("Items").get_child_count() == 0:
-      return hex
+    if hex.get_node("Units").get_child_count() == 0 \
+    and hex.get_node("Items").get_child_count() == 0 \
+    and hex.passable:
+        return hex
 
 func _place_solid(solid, hex, from):
   solid.global_position = hex.global_position

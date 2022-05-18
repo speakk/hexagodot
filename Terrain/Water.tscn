@@ -22,7 +22,7 @@ shader = ExtResource( 3 )
 shader_param/scale = Vector2( 1, 1 )
 shader_param/distortion_scale = Vector2( 0.3, 1 )
 shader_param/intensity = 1.0
-shader_param/random_float = null
+shader_param/random_float = 0.735984
 shader_param/noise = SubResource( 4 )
 
 [node name="Water" instance=ExtResource( 1 )]
@@ -38,7 +38,6 @@ script = ExtResource( 5 )
 
 [node name="Hexagon" parent="." index="1"]
 visible = false
-material = SubResource( 2 )
 texture = ExtResource( 2 )
 
 [node name="Area2D" parent="." index="4"]
