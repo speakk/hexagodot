@@ -9,7 +9,7 @@
 [node name="Hexagon" parent="." index="0"]
 texture = ExtResource( 2 )
 
-[node name="GrassDecals" type="Sprite" parent="." index="7"]
+[node name="GrassDecals" type="Sprite" parent="." index="1"]
 light_mask = 2
 position = Vector2( 0, -1 )
 texture = ExtResource( 3 )

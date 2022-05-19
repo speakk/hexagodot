@@ -28,8 +28,18 @@ polygon = PoolVector2Array( -16.3043, -16.3043, 0, -22.8261, 16.3043, -16.3043, 
 [node name="HoverTween" type="Tween" parent="."]
 
 [node name="PathHilightIndicator" type="Polygon2D" parent="."]
-position = Vector2( 0, 0.740992 )
+position = Vector2( 0, 2 )
 scale = Vector2( 0.179858, 0.179858 )
+color = Color( 0, 0, 0, 0.505882 )
+invert_border = 0.1
+polygon = PoolVector2Array( -16.3043, -16.3043, 0, -23.913, 16.3043, -16.3043, 16.3043, -1.08696, 0, 7, -16.3043, -1.08696 )
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="PathHilightIndicator2" type="Polygon2D" parent="PathHilightIndicator"]
+position = Vector2( 0, -5.55994 )
+scale = Vector2( 1, 1 )
 color = Color( 0.521569, 0.611765, 0.266667, 1 )
 invert_border = 0.1
 polygon = PoolVector2Array( -16.3043, -16.3043, 0, -23.913, 16.3043, -16.3043, 16.3043, -1.08696, 0, 7, -16.3043, -1.08696 )

@@ -46,6 +46,7 @@ func _process(dt):
   
   if raised:
     position = original_position + Vector2(0, -10)
+    $Area2D/CollisionPolygon2D.position = Vector2(0, 10)
     
 func _on_mouse_entered():
   hovered = true

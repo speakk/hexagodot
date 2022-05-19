@@ -11,3 +11,6 @@ texture = ExtResource( 2 )
 
 [node name="LightOccluder2D" parent="." index="2"]
 visible = false
+
+[node name="DropShadowSprite" parent="." index="6"]
+scale = Vector2( 0.493789, 0.493789 )

@@ -331,7 +331,7 @@ func _on_round_started(round_number: int, _wave_length):
     wave_counter += 1
     emit_signal("wave_started", wave_counter)
     var ai_team = get_first_ai_team()
-    for i in range(wave_counter + 2):
+    for i in range(wave_counter + 3):
       yield(AI.spawn_random_egg(ai_team), "completed")
 
 func _on_spawner_finished(spawner_unit):

@@ -2,15 +2,13 @@ extends Node
 
 # don't forget to use stretch mode 'viewport' and aspect 'ignore'
 #onready var viewport = get_viewport()
-var scene_viewport
+#var scene_viewport
 #onready var viewport = get_viewport()
 
 func _ready():
   get_tree().connect("screen_resized", self, "_screen_resized")
 
 func _resize_viewport(the_viewport: Viewport):
-  the_viewport.render_target_clear_mode = Viewport.CLEAR_MODE_ALWAYS
-  the_viewport.render_target_update_mode = Viewport.UPDATE_ALWAYS
   var window_size = OS.get_window_size()
 
   # see how big the window is compared to the viewport size
@@ -30,3 +28,4 @@ func _resize_viewport(the_viewport: Viewport):
 
 func _screen_resized():
   _resize_viewport(get_viewport())
+ # _resize_viewport(SceneManager.get_current_viewport())

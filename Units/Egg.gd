@@ -1,6 +1,6 @@
 extends Unit
 
-export var spawn_countdown: int = 2 setget _set_spawn_countdown
+export var spawn_countdown: int = 1 setget _set_spawn_countdown
 
 var original_scale_y
 var time = randf()
