@@ -65,6 +65,9 @@ func start_turn():
   
   if controller == ControllerType.AI:
     emit_signal("team_turn_finished")
+    
+func add_item_to_inventory(item):
+  pass
 
 enum Commands {
   END_TURN,

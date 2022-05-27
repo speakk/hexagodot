@@ -159,6 +159,10 @@ func consume_item(item):
     
   item.queue_free()
 
+func pick_up_item(item):
+  item.get_parent().remove_child(item)
+  team.add_item_to_inventory(item)
+
 func perform_ranged_attack_animation(against):
   print("perform_ranged_attack_animation")
   var projectile = PROJECTILE.instance()

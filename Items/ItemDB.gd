@@ -7,7 +7,8 @@ enum ItemType {
 var items = {
   ItemType.HealthPotion: {
     "scene": preload("res://Items/HealthPotion.tscn"),
-    "solid": false
+    "solid": false,
+    "spawn_chance": 0.1
   }
 }
 

@@ -88,4 +88,5 @@ func _on_unit_entered_hex(unit, hex):
   if hex == self:
     var items = get_items()
     for item in items:
-      unit.consume_item(item)
+      #unit.consume_item(item)
+      unit.pick_item_up(item)
