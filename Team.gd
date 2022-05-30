@@ -67,7 +67,7 @@ func start_turn():
     emit_signal("team_turn_finished")
     
 func add_item_to_inventory(item):
-  pass
+  $Inventory.add_item(item)
 
 enum Commands {
   END_TURN,

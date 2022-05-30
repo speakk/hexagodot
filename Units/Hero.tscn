@@ -13,10 +13,11 @@ texture = ExtResource( 2 )
 visible = false
 
 [node name="Torch" parent="." index="8" instance=ExtResource( 3 )]
-position = Vector2( 11, 1 )
+position = Vector2( 13, -17 )
+scale = Vector2( 0.921804, 0.498091 )
 
-[node name="Sprite" parent="Torch" index="0"]
-scale = Vector2( 0.4, 0.4 )
+[node name="Moot" parent="Torch" index="0"]
+scale = Vector2( 0.566068, 1 )
 
 [node name="Label" parent="HealthNumberProto" index="0"]
 custom_colors/font_color = Color( 0.482353, 1, 0.337255, 1 )

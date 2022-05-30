@@ -27,8 +27,9 @@ func redraw():
   if unit:
     $CenterContainer.visible = true
     $UnitTypeLabel.text = unit.unit_name
-    $CenterContainer/GridContainer/HP_Label.text = "%s/%s" % [unit.health, unit.max_health]
-    $CenterContainer/GridContainer/Movement_Label.text = "%s/%s" % [unit.movement_points, unit.max_movement_points]
+    get_node("%HP_Label").text = "%s/%s" % [unit.health, unit.max_health]
+    get_node("%Movement_Label").text = "%s/%s" % [unit.movement_points, unit.max_movement_points]
+    
   else:
     $CenterContainer.visible = false
     $UnitTypeLabel.text = "No unit selected"

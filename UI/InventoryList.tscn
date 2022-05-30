@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://UI/InventoryListRow.tscn" type="PackedScene" id=1]
+[ext_resource path="res://UI/InventoryList.gd" type="Script" id=2]
+
+[node name="InventoryList" type="VBoxContainer"]
+margin_top = 36.0
+margin_right = 706.0
+margin_bottom = 50.0
+script = ExtResource( 2 )
+
+[node name="InventoryListRow" parent="." instance=ExtResource( 1 )]
+margin_right = 706.0
+margin_bottom = 14.0

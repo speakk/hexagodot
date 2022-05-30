@@ -11,3 +11,6 @@ signal unit_attacked(by, against, damage)
 signal unit_died(unit)
 signal hero_died(unit)
 signal item_spawned(item, coordinate)
+
+
+signal on_inventory_item_added(inventory, item)

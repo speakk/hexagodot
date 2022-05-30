@@ -34,6 +34,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://HexPrototype.gd"
 }, {
+"base": "Node",
+"class": "Inventory",
+"language": "GDScript",
+"path": "res://Inventory.gd"
+}, {
 "base": "Node2D",
 "class": "Item",
 "language": "GDScript",
@@ -70,6 +75,7 @@ _global_script_class_icons={
 "Coordinate": "",
 "Hex": "",
 "HexPrototype": "",
+"Inventory": "",
 "Item": "",
 "Map": "",
 "MapTools": "",

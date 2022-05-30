@@ -15,8 +15,8 @@ particles_anim_loop = false
 [node name="HealthPotion" instance=ExtResource( 1 )]
 script = ExtResource( 5 )
 
-[node name="HealthPotionSprite" type="Sprite" parent="." index="0"]
-position = Vector2( 0, -18 )
+[node name="Sprite" parent="." index="0"]
+position = Vector2( 0, -7 )
 texture = ExtResource( 2 )
 
 [node name="Particles2D" type="Particles2D" parent="." index="1"]

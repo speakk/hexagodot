@@ -29,6 +29,10 @@ func add_team(name, controller, color):
   team.connect("team_turn_finished", self, "end_turn")
   team.connect("try_to_place_unit", self, "try_to_place_unit")
   team.connect("try_to_move_and_attack", self, "try_to_move_and_attack")
+  
+  if controller == Team.ControllerType.PLAYER:
+    #$InGameUI.get_node("%InventoryUI").connect(team.)
+    team.get_node("Inventory").connect("items_changed", $InGameUI.get_node("%InventoryUI"), "_on_items_changed")
 
   emit_signal("team_added", team)
 

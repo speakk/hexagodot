@@ -18,38 +18,70 @@ align = 1
 [node name="CenterContainer" type="CenterContainer" parent="."]
 margin_top = 33.0
 margin_right = 720.0
-margin_bottom = 59.0
+margin_bottom = 111.0
 
-[node name="GridContainer" type="GridContainer" parent="CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
 margin_left = 323.0
 margin_right = 397.0
+margin_bottom = 78.0
+
+[node name="GridContainer" type="GridContainer" parent="CenterContainer/VBoxContainer"]
+margin_right = 74.0
 margin_bottom = 26.0
 custom_constants/vseparation = 0
 custom_constants/hseparation = 5
 columns = 2
 
-[node name="Label" type="Label" parent="CenterContainer/GridContainer"]
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/GridContainer"]
 margin_right = 53.0
 margin_bottom = 13.0
 text = "Health:"
 align = 2
 
-[node name="HP_Label" type="Label" parent="CenterContainer/GridContainer"]
+[node name="HP_Label" type="Label" parent="CenterContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
 margin_left = 58.0
 margin_right = 74.0
 margin_bottom = 13.0
 text = "3/4"
 
-[node name="Label2" type="Label" parent="CenterContainer/GridContainer"]
+[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/GridContainer"]
 margin_top = 13.0
 margin_right = 53.0
 margin_bottom = 26.0
 text = "Movement:"
 align = 2
 
-[node name="Movement_Label" type="Label" parent="CenterContainer/GridContainer"]
+[node name="Movement_Label" type="Label" parent="CenterContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
 margin_left = 58.0
 margin_top = 13.0
 margin_right = 74.0
 margin_bottom = 26.0
 text = "2/5"
+
+[node name="EquipmentUIGrid" type="GridContainer" parent="CenterContainer/VBoxContainer"]
+margin_top = 46.0
+margin_right = 74.0
+margin_bottom = 78.0
+columns = 2
+
+[node name="Armor" type="PanelContainer" parent="CenterContainer/VBoxContainer/EquipmentUIGrid"]
+margin_right = 14.0
+margin_bottom = 14.0
+
+[node name="Ring" type="PanelContainer" parent="CenterContainer/VBoxContainer/EquipmentUIGrid"]
+margin_left = 18.0
+margin_right = 32.0
+margin_bottom = 14.0
+
+[node name="Weapon1" type="PanelContainer" parent="CenterContainer/VBoxContainer/EquipmentUIGrid"]
+margin_top = 18.0
+margin_right = 14.0
+margin_bottom = 32.0
+
+[node name="Weapon2" type="PanelContainer" parent="CenterContainer/VBoxContainer/EquipmentUIGrid"]
+margin_left = 18.0
+margin_top = 18.0
+margin_right = 32.0
+margin_bottom = 32.0
