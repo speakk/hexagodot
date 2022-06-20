@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://UI/EquipmentSlot.tscn" type="PackedScene" id=1]
+
+[node name="EquipmentUIGrid" type="VBoxContainer"]
+margin_top = 46.0
+margin_right = 74.0
+margin_bottom = 78.0
+
+[node name="Armor" parent="." instance=ExtResource( 1 )]
+margin_right = 109.0
+margin_bottom = 28.0
+slot_name = "Armor"
+slot_id = "armor"
+
+[node name="Ring" parent="." instance=ExtResource( 1 )]
+margin_top = 32.0
+margin_right = 109.0
+margin_bottom = 60.0
+slot_name = "Ring"
+slot_id = "ring"
+item_category = 3
+
+[node name="Weapon1" parent="." instance=ExtResource( 1 )]
+margin_top = 64.0
+margin_right = 109.0
+margin_bottom = 92.0
+slot_name = "Weapon A"
+slot_id = "weapon1"
+item_category = 1
+
+[node name="Weapon2" parent="." instance=ExtResource( 1 )]
+margin_top = 96.0
+margin_right = 109.0
+margin_bottom = 124.0
+slot_name = "Weapon B"
+slot_id = "weapon2"
+item_category = 1

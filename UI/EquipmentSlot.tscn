@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://UI/EquipmentSlot.gd" type="Script" id=1]
+[ext_resource path="res://UI/InventoryListRow.tscn" type="PackedScene" id=2]
+
+[node name="EquipmentSlot" type="PanelContainer"]
+margin_right = 14.0
+margin_bottom = 14.0
+script = ExtResource( 1 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 102.0
+margin_bottom = 21.0
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+margin_bottom = 14.0
+
+[node name="InventoryListRow" parent="HBoxContainer" instance=ExtResource( 2 )]
+margin_left = 4.0
+margin_right = 95.0
+margin_bottom = 14.0

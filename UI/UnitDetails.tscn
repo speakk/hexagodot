@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://themes/in_game_theme.tres" type="Theme" id=1]
 [ext_resource path="res://UI/UnitDetails.gd" type="Script" id=2]
+[ext_resource path="res://UI/EquipmentUIGrid.tscn" type="PackedScene" id=3]
 
 [node name="UnitDetails" type="VBoxContainer"]
 anchor_right = 1.0
@@ -60,28 +61,4 @@ margin_right = 74.0
 margin_bottom = 26.0
 text = "2/5"
 
-[node name="EquipmentUIGrid" type="GridContainer" parent="CenterContainer/VBoxContainer"]
-margin_top = 46.0
-margin_right = 74.0
-margin_bottom = 78.0
-columns = 2
-
-[node name="Armor" type="PanelContainer" parent="CenterContainer/VBoxContainer/EquipmentUIGrid"]
-margin_right = 14.0
-margin_bottom = 14.0
-
-[node name="Ring" type="PanelContainer" parent="CenterContainer/VBoxContainer/EquipmentUIGrid"]
-margin_left = 18.0
-margin_right = 32.0
-margin_bottom = 14.0
-
-[node name="Weapon1" type="PanelContainer" parent="CenterContainer/VBoxContainer/EquipmentUIGrid"]
-margin_top = 18.0
-margin_right = 14.0
-margin_bottom = 32.0
-
-[node name="Weapon2" type="PanelContainer" parent="CenterContainer/VBoxContainer/EquipmentUIGrid"]
-margin_left = 18.0
-margin_top = 18.0
-margin_right = 32.0
-margin_bottom = 32.0
+[node name="EquipmentUIGrid" parent="CenterContainer/VBoxContainer" instance=ExtResource( 3 )]

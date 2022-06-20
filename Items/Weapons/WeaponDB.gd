@@ -11,7 +11,7 @@ var weapons = {
     "attack_range": 1,
     "damage": 2,
     "action_point_cost": 1,
-    "spawn_chance": 0.3
+    "spawn_chance": 0.3,
   }
 }
 
@@ -21,6 +21,7 @@ func load_db_values(weapon, type):
   weapon.damage = data.damage
   weapon.action_point_cost = data.action_point_cost
   weapon.item_name = data.item_name
+  weapon.category = ItemDB.ItemCategory.Weapon
 
 func create_weapon(type) -> Weapon:
   var scene = weapons.get(type).get("scene")
