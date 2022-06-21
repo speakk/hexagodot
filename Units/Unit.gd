@@ -27,6 +27,8 @@ const is_unit = true
 
 var unit_type
 
+onready var equipment_handler = EquipmentHandler.new(self)
+
 func _ready():
   $Sprite.material = $Sprite.material.duplicate()
   $DamageNumberProto.visible = false

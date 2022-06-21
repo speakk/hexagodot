@@ -2,8 +2,6 @@ extends HBoxContainer
 
 var item
 
-
-
 func init(_item: Item):
   item = _item
   $Label.text = item.item_name

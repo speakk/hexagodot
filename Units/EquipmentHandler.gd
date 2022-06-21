@@ -4,6 +4,13 @@ class_name EquipmentHandler
 
 signal item_equipped(slot_id, item)
 
+var unit
+
+func _init(_unit):
+  unit = _unit
+  Events.connect("item_dragged_into_slot", self, "_on_item_dragged_into_slot")
+  return self
+
 class Slot:
   var name: String
   var item: Item
@@ -14,7 +21,7 @@ class Slot:
     category = _category
   
   func equip(_item):
-    assert(item.category == category)
+    assert(_item.category == category)
     item = _item
 
 var slots = {
@@ -27,3 +34,8 @@ var slots = {
 func equip(slot_id, item: Item):
   slots.get(slot_id).equip(item)
   emit_signal("item_equipped", slot_id, item)
+  print("EQUIPPPPPPED", item)
+
+func _on_item_dragged_into_slot(item, slot_id, _unit):
+  if _unit == unit:
+    equip(slot_id, item)
