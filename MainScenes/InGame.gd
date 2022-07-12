@@ -141,11 +141,11 @@ func command_place_unit(args):
 func command_move_unit(args):
   yield(get_tree(), "idle_frame")
   
-  print("in command_move unit, pathsize vs mov points: %s %s" % [args.path.size(), args.unit.movement_points])
+  print("in command_move unit, pathsize vs mov points: %s %s" % [args.path.size(), args.unit.action_points])
   if args.path.size() <= 1:
     return true
   
-  if args.path.size() - 1 > args.unit.movement_points:
+  if args.path.size() - 1 > args.unit.action_points:
     yield(get_tree(), "idle_frame")
     print("UH, path size was over yea")
     return false
@@ -153,25 +153,35 @@ func command_move_unit(args):
   yield($Map.animate_unit_move(args), "completed")
   var from = args.unit.get_coordinate()
   var to_hex = $Map.hexes[args.path[args.path.size() - 1]] 
-  var movement_points = args.path.size() - 1
-  $Map.place_unit(args.unit, to_hex, movement_points)
+  var action_points = args.path.size() - 1
+  $Map.place_unit(args.unit, to_hex, action_points)
   Events.emit_signal("unit_moved", args.unit, from, to_hex.to_coordinate())
   deselect()
   return true
   
 func command_attack(args):
   yield(get_tree(), "idle_frame")
-  if args.by.attack_range < MapTools.get_distance(args.by.get_coordinate(), args.against.get_coordinate()):
+
+  # TODO: Have default weapon handling WAY somewhere else!
+  var item = args.by.get_selected_attack_item()
+  if not item:
+    item = WeaponDB.create_weapon(WeaponDB.WeaponType.Pebble)
+  var damage = item.damage
+  var action_points = item.action_point_cost
+  var attack_range = item.attack_range
+  
+  if attack_range < MapTools.get_distance(args.by.get_coordinate(), args.against.get_coordinate()):
     return false
     
-  if args.by.attack_points <= 0:
+  if args.by.action_points <= 0:
     return false
+  
     
   print("Attack!")
   yield($Map.animate_unit_attack(args), "completed")
-  args.against.take_damage(args.by.damage_amount)
-  args.by.use_attack_points(1)
-  Events.emit_signal("unit_attacked", args.by, args.against, args.by.damage_amount)
+  args.against.take_damage(damage)
+  args.by.use_action_points(action_points)
+  Events.emit_signal("unit_attacked", args.by, args.against, damage)
   return true
   
   
@@ -246,7 +256,7 @@ func try_to_move_and_attack(by, against, path):
   print("try_to_move_and_attack")
   if not path:
     print("Didn't have path so let's check coordinates: %s %s" % [by.get_coordinate(), against.get_coordinate()])
-    path = $Map.get_astar_path(by.get_coordinate(), against.get_coordinate(), by.movement_points)
+    path = $Map.get_astar_path(by.get_coordinate(), against.get_coordinate(), by.action_points)
   
   if not path:
     return false
@@ -295,7 +305,7 @@ func get_shortest_path_to_occupied_tile(from, to, unit):
   for neighbor_direction in neighbor_directions:
     var neighbor_coordinate = MapTools.coordinate_add(to, neighbor_direction)
     if $Map.astar.has_point(neighbor_coordinate.to_int()):
-      potential_paths.push_back($Map.get_astar_path(from, neighbor_coordinate, unit.movement_points, unit.attack_range))
+      potential_paths.push_back($Map.get_astar_path(from, neighbor_coordinate, unit.action_points, unit.attack_range))
   
   var shortest_path
   for potential_path in potential_paths:
@@ -313,7 +323,7 @@ func _on_Map_hex_hovered(hex):
     var existing_units = hex.get_units()
     
     if existing_units.size() == 0:
-      last_hilighted_path = $Map.get_astar_path(from_coord, coordinate, selected_unit.movement_points)
+      last_hilighted_path = $Map.get_astar_path(from_coord, coordinate, selected_unit.action_points)
       $Map.set_hilighted_path(last_hilighted_path)
     elif existing_units[0].team != get_current_team():
       print("YESSIR?")

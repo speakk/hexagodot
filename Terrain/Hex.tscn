@@ -39,7 +39,6 @@ __meta__ = {
 
 [node name="PathHilightIndicator2" type="Polygon2D" parent="PathHilightIndicator"]
 position = Vector2( 0, -5.55994 )
-scale = Vector2( 1, 1 )
 color = Color( 0.521569, 0.611765, 0.266667, 1 )
 invert_border = 0.1
 polygon = PoolVector2Array( -16.3043, -16.3043, 0, -23.913, 16.3043, -16.3043, 16.3043, -1.08696, 0, 7, -16.3043, -1.08696 )

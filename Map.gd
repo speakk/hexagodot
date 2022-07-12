@@ -201,12 +201,12 @@ func spawn_unit(unit, hex):
   unit.add_child(fx)
   _place_solid(unit, hex, null)
 
-func place_unit(unit, hex, movement_points = 0):
+func place_unit(unit, hex, action_points = 0):
   if unit.get_parent():
     unit.get_parent().remove_child(unit)
   hex.get_node("Units").add_child(unit)
   var original_from = Coordinate.new(unit.q, unit.r)
-  unit.place(hex.q, hex.r, movement_points)
+  unit.place(hex.q, hex.r, action_points)
   Events.emit_signal("unit_entered_hex", unit, hex)
   
   _place_solid(unit, hex, original_from)

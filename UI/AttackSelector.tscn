@@ -1,11 +1,14 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://UI/InventoryListRow.tscn" type="PackedScene" id=1]
 [ext_resource path="res://UI/AttackSelector.gd" type="Script" id=2]
 
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 67.5, 20.5 )
+
 [node name="AttackSelector" type="PanelContainer"]
-margin_right = 90.0
-margin_bottom = 30.0
+margin_right = 140.0
+margin_bottom = 45.0
 rect_min_size = Vector2( 90, 30 )
 script = ExtResource( 2 )
 
@@ -13,15 +16,34 @@ script = ExtResource( 2 )
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 133.0
-margin_bottom = 23.0
+margin_bottom = 38.0
 
 [node name="InventoryListRow" parent="HBoxContainer" instance=ExtResource( 1 )]
 margin_right = 91.0
-margin_bottom = 16.0
+margin_bottom = 31.0
 
 [node name="ActionPointCostLabel" type="Label" parent="HBoxContainer"]
 margin_left = 95.0
-margin_top = 1.0
+margin_top = 8.0
 margin_right = 126.0
-margin_bottom = 15.0
+margin_bottom = 22.0
 text = "(1ap)"
+
+[node name="DisabledLabel" type="Label" parent="."]
+margin_left = 7.0
+margin_top = 15.0
+margin_right = 133.0
+margin_bottom = 29.0
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( 69.5, 22.5 )
+shape = SubResource( 1 )
+
+[node name="SelectedBorder" type="Polygon2D" parent="."]
+invert_enable = true
+invert_border = 1.0
+polygon = PoolVector2Array( 0, 0, 136, 0, 136, 48, 0, 48 )
+
+[connection signal="input_event" from="Area2D" to="." method="_on_selector_input_event"]

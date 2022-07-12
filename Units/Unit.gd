@@ -14,10 +14,8 @@ export var health: int = 4 setget _set_health
 export var max_health: int = health
 export var damage_amount: int = 1
 export var alive: bool = true
-export var movement_points: int = 5
-export var max_movement_points: int = movement_points
-export var attack_points: int = 1
-export var max_attack_points: int = attack_points
+export var action_points: int = 5
+export var max_action_points: int = action_points
 export var attack_range: int = 1
 export var unit_name: String = ""
 
@@ -26,6 +24,7 @@ export var ai_controlled: bool = false
 const is_unit = true
 
 var unit_type
+var selected_attack_slot_id
 
 onready var equipment_handler = EquipmentHandler.new(self)
 
@@ -33,16 +32,29 @@ func _ready():
   $Sprite.material = $Sprite.material.duplicate()
   $DamageNumberProto.visible = false
   $HealthNumberProto.visible = false
+  Events.connect("attack_selected", self, "_on_attack_selected")
 
 func init(type):
   unit_type = type
   return self
 
-func place(_q, _r, movement_points = 0):
+# TODO: selected_attack_slot_id probably shouldn't be stored in Unit but in some UI thing
+# because it's only used when attacking via UI
+func _on_attack_selected(_unit, slot_id, item):
+  if _unit == self:
+    selected_attack_slot_id = slot_id
+  else:
+    selected_attack_slot_id = null
+
+func get_selected_attack_item():
+  if selected_attack_slot_id:
+    return equipment_handler.get_slot_item(selected_attack_slot_id)
+
+func place(_q, _r, action_points = 0):
   q = _q
   r = _r
-  if movement_points:
-    use_movement_points(movement_points)
+  if action_points:
+    use_action_points(action_points)
   
 func get_coordinate():
   return Coordinate.new(q, r)
@@ -59,8 +71,7 @@ func deselect():
   $SelectRing.visible = false
 
 func reset_points():
-  _set_movement_points(max_movement_points)
-  _set_attack_points(max_attack_points)
+  _set_action_points(max_action_points)
 
 func set_team(_team):
   team = _team
@@ -128,19 +139,12 @@ func set_alive(value):
   alive = value
   visible = value
 
-func _set_movement_points(value):
-  movement_points = value
-  $ActionBar.movement_points = movement_points
+func _set_action_points(value):
+  action_points = value
+  $ActionBar.action_points = action_points
 
-func use_movement_points(amount):
-  _set_movement_points(movement_points - amount)
-
-func _set_attack_points(value):
-  attack_points = value
-  $ActionBar.attack_points = attack_points
-
-func use_attack_points(amount):
-  _set_attack_points(attack_points - amount)
+func use_action_points(amount):
+  _set_action_points(action_points - amount)
 
 # Default implementation, can be overridden
 func process_turn():

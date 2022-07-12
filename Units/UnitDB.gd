@@ -9,8 +9,7 @@ var units = {
     "name": "Hero (it's you!)",
     "health": 6,
     "damage": 1,
-    "movement_points": 5,
-    "attack_points": 2,
+    "action_points": 5,
     "attack_range": 2,
     "scene": preload("res://Units/Hero.tscn")
    },
@@ -18,8 +17,7 @@ var units = {
     "name": "Skelly",
     "health": 2,
     "damage": 1,
-    "movement_points": 2,
-    "attack_points": 1,
+    "action_points": 2,
     "attack_range": 1,
     "sprite": preload("res://assets/sprites/skelly.png")
    },
@@ -27,8 +25,7 @@ var units = {
     "name": "Helper",
     "health": 2,
     "damage": 1,
-    "movement_points": 4,
-    "attack_points": 1,
+    "action_points": 4,
     "attack_range": 1,
     "scene": preload("res://Units/Helper.tscn")
    },
@@ -36,8 +33,7 @@ var units = {
     "name": "Golem (slow but steady)",
     "health": 3,
     "damage": 2,
-    "movement_points": 2,
-    "attack_points": 1,
+    "action_points": 2,
     "attack_range": 1,
     "scene": preload("res://Units/Golem.tscn")
    },
@@ -45,8 +41,7 @@ var units = {
     "name": "Egg (will spawn soon!)",
     "health": 1,
     "damage": 0,
-    "movement_points": 0,
-    "attack_points": 0,
+    "action_points": 0,
     "attack_range": 0,
     "scene": preload("res://Units/Egg.tscn")
    }
@@ -58,10 +53,8 @@ func load_db_values(unit, type):
   unit.unit_type = type
   unit.health = data.get("health")
   unit.max_health = unit.health
-  unit.movement_points = data.get("movement_points")
-  unit.attack_points = data.get("attack_points")
-  unit.max_movement_points = unit.movement_points
-  unit.max_attack_points = unit.attack_points
+  unit.action_points = data.get("action_points")
+  unit.max_action_points = unit.action_points
   unit.attack_range = data.get("attack_range")
   
   if not data.get("scene"):

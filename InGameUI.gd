@@ -25,9 +25,9 @@ func handle_button_and_team_labels(teams, current_team):
     $Teams.add_child(label)
 
   if current_team.controller == Team.ControllerType.PLAYER:
-    $EndTurnButton.disabled = false
+    $BottomButtons/VBoxContainer3/EndTurnButton.disabled = false
   else:
-    $EndTurnButton.disabled = true
+    $BottomButtons/VBoxContainer3/EndTurnButton.disabled = true
 
 func _on_EndTurnButton_pressed():
   emit_signal("player_end_turn_pressed")

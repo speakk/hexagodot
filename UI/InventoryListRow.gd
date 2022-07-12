@@ -2,6 +2,8 @@ extends HBoxContainer
 
 var item
 
+export(String) var default_label = ""
+
 func init(_item: Item):
   item = _item
   $Label.text = item.item_name

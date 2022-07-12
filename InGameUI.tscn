@@ -24,13 +24,6 @@ margin_bottom = 21.0
 rect_scale = Vector2( 1.72, 1.72 )
 text = "Next wave in 3 turns..."
 
-[node name="EndTurnButton" type="Button" parent="."]
-margin_left = 424.0
-margin_top = 424.0
-margin_right = 520.0
-margin_bottom = 456.0
-text = "End Turn"
-
 [node name="Label" type="Label" parent="."]
 margin_left = 24.0
 margin_top = 16.0
@@ -105,42 +98,65 @@ margin_top = 281.0
 margin_right = 120.0
 margin_bottom = 308.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="BottomButtons" type="HBoxContainer" parent="."]
 margin_left = 168.0
 margin_top = 408.0
 margin_right = 408.0
-margin_bottom = 451.0
+margin_bottom = 421.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="BottomButtons"]
+margin_right = 118.0
+margin_bottom = 41.0
 custom_constants/separation = 0
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
-margin_right = 240.0
-margin_bottom = 13.0
-
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2"]
-margin_right = 90.0
+[node name="Label" type="Label" parent="BottomButtons/VBoxContainer"]
+margin_right = 118.0
 margin_bottom = 13.0
 rect_min_size = Vector2( 90, 0 )
 text = "Attack A"
 
-[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer2"]
-margin_left = 94.0
-margin_right = 184.0
+[node name="AttackSelector" parent="BottomButtons/VBoxContainer" instance=ExtResource( 6 )]
+margin_top = 13.0
+margin_right = 118.0
+margin_bottom = 41.0
+rect_min_size = Vector2( 90, 28 )
+slot_id = 0
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="BottomButtons"]
+margin_left = 122.0
+margin_right = 240.0
+margin_bottom = 41.0
+custom_constants/separation = 0
+
+[node name="Label2" type="Label" parent="BottomButtons/VBoxContainer2"]
+margin_right = 118.0
 margin_bottom = 13.0
 rect_min_size = Vector2( 90, 0 )
 text = "Attack B"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="AttackSelector2" parent="BottomButtons/VBoxContainer2" instance=ExtResource( 6 )]
 margin_top = 13.0
-margin_right = 240.0
-margin_bottom = 43.0
-
-[node name="AttackSelector" parent="VBoxContainer/HBoxContainer" instance=ExtResource( 6 )]
 margin_right = 118.0
-slot_id = 0
-
-[node name="AttackSelector2" parent="VBoxContainer/HBoxContainer" instance=ExtResource( 6 )]
-margin_left = 122.0
-margin_right = 240.0
+margin_bottom = 41.0
+rect_min_size = Vector2( 90, 28 )
 slot_id = 1
 
-[connection signal="pressed" from="EndTurnButton" to="." method="_on_EndTurnButton_pressed"]
+[node name="VBoxContainer3" type="VBoxContainer" parent="BottomButtons"]
+margin_left = 244.0
+margin_right = 324.0
+margin_bottom = 41.0
+rect_min_size = Vector2( 80, 0 )
+custom_constants/separation = 0
+
+[node name="Label" type="Label" parent="BottomButtons/VBoxContainer3"]
+margin_right = 80.0
+margin_bottom = 13.0
+
+[node name="EndTurnButton" type="Button" parent="BottomButtons/VBoxContainer3"]
+margin_top = 13.0
+margin_right = 80.0
+margin_bottom = 41.0
+rect_min_size = Vector2( 0, 28 )
+text = "End Turn"
+
+[connection signal="pressed" from="BottomButtons/VBoxContainer3/EndTurnButton" to="." method="_on_EndTurnButton_pressed"]

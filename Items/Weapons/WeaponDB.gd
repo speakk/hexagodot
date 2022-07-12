@@ -1,7 +1,7 @@
 extends Node
 
 enum WeaponType {
-  Club
+  Club, Pebble
 }
 
 var weapons = {
@@ -13,6 +13,15 @@ var weapons = {
     "action_point_cost": 1,
     "spawn_chance": 0.3,
     "damage_roll": "1d6"
+  },
+  WeaponType.Pebble: {
+    "sprite": preload("res://assets/sprites/items/weapons/rock.png"),
+    "item_name": "A pebble",
+    "attack_range": 2,
+    "damage": 2,
+    "action_point_cost": 1,
+    "spawn_chance": 0.3,
+    "damage_roll": "1d3"
   }
 }
 
@@ -27,7 +36,13 @@ func load_db_values(weapon, type):
 
 func create_weapon(type) -> Weapon:
   var scene = weapons.get(type).get("scene")
-  var weapon = scene.instance(type)
-
+  var weapon
+  if scene:
+    weapon = scene.instance(type)
+  else:
+    weapon = preload("res://Items/Weapons/Weapon.tscn").instance()
+    weapon.get_node("Sprite").texture = weapons.get(type).get("sprite")
+  
+    
   load_db_values(weapon, type)
   return weapon
