@@ -1,7 +1,7 @@
 extends PanelContainer
 
 export var slot_name: String = "" setget set_slot_name
-export var slot_id: String = ""
+export(ItemDB.SlotId) var slot_id = ItemDB.SlotId.Armor
 export(ItemDB.ItemCategory) var item_category = ItemDB.ItemCategory.Armor
 
 var unit

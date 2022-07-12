@@ -15,3 +15,4 @@ signal item_spawned(item, coordinate)
 
 signal on_inventory_item_added(inventory, item)
 signal item_dragged_into_slot(item, slot_id, unit)
+signal item_equipped(item, slot_id, unit)

@@ -164,6 +164,9 @@ func consume_item(item):
 func pick_up_item(item):
   item.get_parent().remove_child(item)
   team.add_item_to_inventory(item)
+  
+func get_equipped_item(slot_id):
+  return equipment_handler.get_slot_item(slot_id)
 
 func perform_ranged_attack_animation(against):
   print("perform_ranged_attack_animation")

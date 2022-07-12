@@ -27,7 +27,7 @@ _global_script_classes=[ {
 "base": "Node2D",
 "class": "EquipmentHandler",
 "language": "GDScript",
-"path": "res://Units/EquipmentHandler.gd"
+"path": "res://EquipmentHandler.gd"
 }, {
 "base": "YSort",
 "class": "Hex",
