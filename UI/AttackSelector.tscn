@@ -3,47 +3,49 @@
 [ext_resource path="res://UI/InventoryListRow.tscn" type="PackedScene" id=1]
 [ext_resource path="res://UI/AttackSelector.gd" type="Script" id=2]
 
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 67.5, 20.5 )
+[sub_resource type="StyleBoxFlat" id=2]
+resource_local_to_scene = true
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
 
 [node name="AttackSelector" type="PanelContainer"]
 margin_right = 140.0
 margin_bottom = 45.0
 rect_min_size = Vector2( 90, 30 )
+mouse_filter = 1
+custom_styles/panel = SubResource( 2 )
 script = ExtResource( 2 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 133.0
-margin_bottom = 38.0
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 138.0
+margin_bottom = 43.0
 
 [node name="InventoryListRow" parent="HBoxContainer" instance=ExtResource( 1 )]
 margin_right = 91.0
-margin_bottom = 31.0
+margin_bottom = 41.0
 
 [node name="ActionPointCostLabel" type="Label" parent="HBoxContainer"]
 margin_left = 95.0
-margin_top = 8.0
+margin_top = 13.0
 margin_right = 126.0
-margin_bottom = 22.0
+margin_bottom = 27.0
 text = "(1ap)"
 
 [node name="DisabledLabel" type="Label" parent="."]
-margin_left = 7.0
+margin_left = 2.0
 margin_top = 15.0
-margin_right = 133.0
+margin_right = 138.0
 margin_bottom = 29.0
 
-[node name="Area2D" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2( 69.5, 22.5 )
-shape = SubResource( 1 )
-
 [node name="SelectedBorder" type="Polygon2D" parent="."]
+visible = false
 invert_enable = true
 invert_border = 1.0
-polygon = PoolVector2Array( 0, 0, 136, 0, 136, 48, 0, 48 )
+polygon = PoolVector2Array( 0, 0, 136, 0, 136, 40, 64, 40, 0, 40 )
 
-[connection signal="input_event" from="Area2D" to="." method="_on_selector_input_event"]
+[connection signal="gui_input" from="." to="." method="_on_AttackSelector_gui_input"]

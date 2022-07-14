@@ -28,7 +28,7 @@ func load_db_values(item, type):
   item.solid = data.solid
   item.item_name = data.item_name
   item.category = data.category
-  item.action_point_cost = data.action_point_cost or 0
+  item.action_point_cost = data.action_point_cost if data.action_point_cost else 0
 
 func create_item(type) -> Item:
   var scene = items.get(type).get("scene")
