@@ -42,12 +42,13 @@ func init(type):
 # because it's only used when attacking via UI
 func _on_attack_selected(_unit, slot_id, item):
   if _unit == self:
+    print("Set the thing")
     selected_attack_slot_id = slot_id
   else:
     selected_attack_slot_id = null
 
 func get_selected_attack_item():
-  if selected_attack_slot_id:
+  if selected_attack_slot_id != null:
     return equipment_handler.get_slot_item(selected_attack_slot_id)
 
 func place(_q, _r, action_points = 0):
